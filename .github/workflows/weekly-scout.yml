@@ -1,0 +1,54 @@
+name: Weekly STR Scout
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the scout
+        id: scout
+        env:
+          RENTCAST_API_KEY: ${{ secrets.RENTCAST_API_KEY }}
+          AIRDNA_API_KEY: ${{ secrets.AIRDNA_API_KEY }}
+        run: python -m src.main
+
+      - name: Open a GitHub Issue with the digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "${{ steps.scout.outputs.issue_title }}" \
+            --body-file "${{ steps.scout.outputs.digest_path }}"
+
+      - name: Save the digest as a downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: str-digest
+          path: digests/latest.md
+
+      - name: Commit the digest back to the repo
+        run: |
+          git config user.name "str-scout-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add digests/
+          git commit -m "Weekly digest" || echo "nothing to commit"
+          git push || echo "nothing to push"
