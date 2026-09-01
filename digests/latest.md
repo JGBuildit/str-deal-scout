@@ -1,8 +1,6 @@
 # STR Deal Scout - weekly digest (2026-09-01)
 
-> **DEMO MODE** - showing built-in sample listings. Add a `RENTCAST_API_KEY` secret for live data.
-
-Scanned 4 lakes. **3 candidate(s) passed** the filters; 3 flagged for review.
+Scanned 4 lakes. **96 candidate(s) passed** the filters; 77 flagged for review.
 
 _The agent reports; it does not decide. Verify every flag - leasehold, zoning, dock ownership, HOA STR rules - before an offer._
 
@@ -10,17 +8,184 @@ _The agent reports; it does not decide. Verify every flag - leasehold, zoning, d
 
 | Score | Property | Market | Price | Gross | Cap (self) | Cap (pro) | Notes |
 |---|---|---|---|---|---|---|---|
-| 100 | 259 NE River Rd, Lake Milton, OH (3bd) | Lake Milton, OH | $295,000 | $51,388 | 11.8% | 7.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
-| 78 | 10024 Cummins Ln, Berlin Center, OH (3bd) | Berlin Reservoir, OH | $389,000 | $41,975 | 6.3% | 3.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
-| 67 | 506 Milton Commons Blvd A6, Lake Milton, OH (2bd) | Lake Milton, OH | $379,500 | $45,355 | 6.2% | 3.5% | Condo/HOA/gated - CONFIRM the association permits STR; Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+| 85 | Mahoning Rd, Diamond, OH 44412 (0bd) | Lake Milton, OH | $69,900 | $44,731 | 46.3% | 32.3% | - |
+| 85 | Redwood Rd, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $10,000 | $44,731 | 333.5% | 235.1% | - |
+| 85 | Grandview Rd, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $154,900 | $44,731 | 20.0% | 13.7% | - |
+| 85 | Maplewood Ave, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $35,500 | $44,731 | 92.8% | 65.1% | - |
+| 85 | Idylwild Ave, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $30,000 | $44,731 | 110.1% | 77.3% | - |
+| 85 | Mahoning Ave, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $200,000 | $44,731 | 15.2% | 10.2% | - |
+| 85 | Milton Ave, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $59,900 | $44,731 | 54.4% | 37.9% | - |
+| 85 | Clearmont Rd, Lake Milton, OH 44429 (2bd) | Lake Milton, OH | $250,000 | $39,321 | 10.1% | 6.7% | - |
+| 85 | 259 River Rd NE, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $285,000 | $44,731 | 10.2% | 6.7% | - |
+| 85 | 15760 N Palmyra Rd, Diamond, OH 44412 (3bd) | Lake Milton, OH | $279,900 | $44,731 | 10.4% | 6.9% | - |
+| 85 | 18015 Hillcrest Dr, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $199,900 | $44,731 | 15.2% | 10.2% | - |
+| 85 | 121 Lakeview St, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $289,900 | $44,731 | 10.0% | 6.6% | - |
+| 85 | 3555 State Route 534 Rd, Newton Falls, OH 44444 (5bd) | Lake Milton, OH | $320,000 | $55,549 | 11.5% | 7.7% | - |
+| 85 | N East River Rd, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $49,900 | $44,731 | 65.6% | 45.8% | - |
+| 85 | 1499 Beachview Dr, Lake Milton, OH 44429 (5bd) | Lake Milton, OH | $225,000 | $55,549 | 17.0% | 11.6% | - |
+| 85 | 17964 Glendale Ave, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $249,900 | $44,731 | 11.8% | 7.9% | - |
+| 85 | 17448 Laurel Ave, Lake Milton, OH 44429 (2bd) | Lake Milton, OH | $189,900 | $39,321 | 13.8% | 9.3% | - |
+| 85 | 10685 Scotts Corner Rd, Diamond, OH 44412 (4bd) | Lake Milton, OH | $308,500 | $50,140 | 10.6% | 7.0% | - |
+| 85 | 3746 Mcclintocksburg Rd, Diamond, OH 44412 (4bd) | Lake Milton, OH | $239,900 | $50,140 | 14.1% | 9.5% | - |
+| 85 | 3647 S Newton Falls Rd, Diamond, OH 44412 (2bd) | Lake Milton, OH | $100,000 | $39,321 | 27.7% | 19.1% | - |
+| 85 | Recreation Dr, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $39,900 | $44,731 | 82.4% | 57.7% | - |
+| 85 | 18018 Hillcrest Dr, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $230,000 | $44,731 | 13.0% | 8.7% | - |
+| 85 | 105 Hartzell Rd, North Benton, OH 44449 (2bd) | Berlin Reservoir, OH | $99,900 | $32,120 | 21.4% | 14.3% | - |
+| 85 | 2316 Deerfield Dr, Deerfield, OH 44411 (3bd) | Berlin Reservoir, OH | $19,900 | $36,500 | 130.4% | 90.1% | - |
+| 85 | State Route, 14, Deerfield, OH 44411 (0bd) | Berlin Reservoir, OH | $129,900 | $36,500 | 18.6% | 12.4% | - |
+| 85 | 2434 Taft Ave, Deerfield, OH 44411 (3bd) | Berlin Reservoir, OH | $70,000 | $36,500 | 35.9% | 24.5% | - |
+| 85 | 10745 Leffingwell Rd, North Benton, OH 44449 (0bd) | Berlin Reservoir, OH | $198,000 | $36,500 | 11.7% | 7.6% | - |
+| 85 | 15789 Coalbank St NE, Alliance, OH 44601 (0bd) | Berlin Reservoir, OH | $89,000 | $36,500 | 27.9% | 18.9% | - |
+| 85 | 14665 W Akron Canfield Rd, Berlin Center, OH 44401 (2bd) | Berlin Reservoir, OH | $85,000 | $32,120 | 25.4% | 17.1% | - |
+| 85 | 175 W Ohio Ave, Sebring, OH 44672 (3bd) | Berlin Reservoir, OH | $93,500 | $36,500 | 26.5% | 17.9% | - |
+| 85 | 208 S 15th St, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $170,000 | $32,120 | 11.9% | 7.8% | - |
+| 85 | 215 E Pennsylvania Ave, Sebring, OH 44672 (3bd) | Berlin Reservoir, OH | $179,900 | $36,500 | 13.0% | 8.5% | - |
+| 85 | 615 W Ohio Ave, Sebring, OH 44672 (4bd) | Berlin Reservoir, OH | $214,900 | $40,880 | 12.2% | 8.0% | - |
+| 85 | 265 S Johnson Rd, Sebring, OH 44672 (4bd) | Berlin Reservoir, OH | $150,000 | $40,880 | 18.1% | 12.1% | - |
+| 85 | 62 Redwood Dr, Beloit, OH 44609 (2bd) | Berlin Reservoir, OH | $35,000 | $32,120 | 64.0% | 43.8% | - |
+| 85 | 216 W Pennsylvania Ave, Sebring, OH 44672 (4bd) | Berlin Reservoir, OH | $134,900 | $40,880 | 20.3% | 13.7% | - |
+| 85 | 496 W Indiana Ave, Sebring, OH 44672 (4bd) | Berlin Reservoir, OH | $249,900 | $40,880 | 10.2% | 6.6% | - |
+| 85 | 355 N 12th St, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $139,800 | $32,120 | 14.8% | 9.8% | - |
+| 85 | 232 S 15th St, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $129,500 | $32,120 | 16.1% | 10.7% | - |
+| 85 | 365 W Indiana Ave, Sebring, OH 44672 (3bd) | Berlin Reservoir, OH | $154,500 | $36,500 | 15.4% | 10.2% | - |
+| 85 | W Nevada Ave, Sebring, OH 44672 (0bd) | Berlin Reservoir, OH | $40,000 | $36,500 | 64.1% | 44.0% | - |
+| 85 | 456 W New York Ave, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $70,000 | $32,120 | 31.2% | 21.1% | - |
+| 85 | 631 W Oregon Ave, Sebring, OH 44672 (3bd) | Berlin Reservoir, OH | $159,000 | $36,500 | 14.9% | 9.9% | - |
+| 85 | 806 W Ohio Ave, Sebring, OH 44672 (0bd) | Berlin Reservoir, OH | $36,000 | $36,500 | 71.4% | 49.1% | - |
+| 85 | 9065 12th St, North Benton, OH 44449 (3bd) | Berlin Reservoir, OH | $174,900 | $36,500 | 13.4% | 8.8% | - |
+| 85 | 296 W Pennsylvania Ave, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $70,000 | $32,120 | 31.2% | 21.1% | - |
+| 85 | 225 W Indiana Ave, Sebring, OH 44672 (3bd) | Berlin Reservoir, OH | $89,900 | $36,500 | 27.6% | 18.7% | - |
+| 85 | 18630 Fifth St, Beloit, OH 44609 (3bd) | Berlin Reservoir, OH | $59,900 | $36,500 | 42.3% | 28.8% | - |
+| 85 | 18061 Derr Ave, Beloit, OH 44609 (2bd) | Berlin Reservoir, OH | $147,000 | $32,120 | 14.0% | 9.2% | - |
+| 85 | 8386 Yale Rd, Rootstown, OH 44272 (2bd) | Berlin Reservoir, OH | $50,000 | $32,120 | 44.3% | 30.2% | - |
+| 85 | 555 W New York Ave, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $70,000 | $32,120 | 31.2% | 21.1% | - |
+| 85 | 376 E 1/2 Ohio Ave, Sebring, OH 44672 (2bd) | Berlin Reservoir, OH | $119,900 | $32,120 | 17.5% | 11.7% | - |
+| 85 | Chautauqua Ave, Ashville, NY 14710 (0bd) | Bemus Point, NY (Chautauqua Lake) | $39,000 | $41,062 | 75.2% | 52.1% | - |
+| 83 | 3462 Old Bridge Rd, Stow, NY 14785 (2bd) | Bemus Point, NY (Chautauqua Lake) | $219,000 | $36,135 | 9.7% | 6.1% | - |
+| 83 | Townline Rd, North East, PA 16428 (0bd) | Findley Lake / Peek'n Peak, NY | $115,000 | $22,338 | 9.6% | 5.3% | - |
+| 82 | 2035 S Pricetown Rd, Diamond, OH 44412 (2bd) | Lake Milton, OH | $265,000 | $39,321 | 9.5% | 6.2% | - |
+| 82 | 3046 Carpenter Pringle Rd, Ashville, NY 14710 (3bd) | Bemus Point, NY (Chautauqua Lake) | $255,000 | $41,062 | 9.5% | 5.9% | - |
+| 78 | 189 Hawthorne Dr, Deerfield, OH 44449 (2bd) | Berlin Reservoir, OH | $219,000 | $32,120 | 8.9% | 5.7% | - |
+| 75 | 5460 Weaver Rd, Bemus Point, NY 14712 (0bd) | Bemus Point, NY (Chautauqua Lake) | $74,900 | $41,062 | 38.0% | 26.0% | In village limits - verify STR zoning / density cap |
+| 75 | Main St, Bemus Point, NY 14712 (0bd) | Bemus Point, NY (Chautauqua Lake) | $125,000 | $41,062 | 21.8% | 14.6% | In village limits - verify STR zoning / density cap |
+| 75 | 4931 Main St, Bemus Point, NY 14712 (2bd) | Bemus Point, NY (Chautauqua Lake) | $179,000 | $36,135 | 12.4% | 8.0% | In village limits - verify STR zoning / density cap |
+| 75 | Walker Rd, Bemus Point, NY 14712 (0bd) | Bemus Point, NY (Chautauqua Lake) | $179,900 | $41,062 | 14.4% | 9.4% | In village limits - verify STR zoning / density cap |
+| 75 | 9 Shore Acres Dr, Bemus Point, NY 14712 (2bd) | Bemus Point, NY (Chautauqua Lake) | $38,500 | $36,135 | 66.4% | 45.8% | In village limits - verify STR zoning / density cap |
+| 75 | Belleview Rd E, Bemus Point, NY 14712 (0bd) | Bemus Point, NY (Chautauqua Lake) | $59,900 | $41,062 | 48.2% | 33.1% | In village limits - verify STR zoning / density cap |
+| 75 | 16 Shore Acres Dr, Bemus Point, NY 14712 (2bd) | Bemus Point, NY (Chautauqua Lake) | $38,000 | $36,135 | 67.3% | 46.4% | In village limits - verify STR zoning / density cap |
+| 75 | 4015 N Clifford Ave, Bemus Point, NY 14712 (3bd) | Bemus Point, NY (Chautauqua Lake) | $214,900 | $41,062 | 11.7% | 7.5% | In village limits - verify STR zoning / density cap |
+| 75 | 10344 N Main St N, Findley Lake, NY 14736 (4bd) | Findley Lake / Peek'n Peak, NY | $145,000 | $24,966 | 8.3% | 4.5% | - |
+| 74 | 4191 Hallock Young Rd, Newton Falls, OH 44444 (3bd) | Lake Milton, OH | $339,900 | $44,731 | 8.2% | 5.3% | - |
+| 74 | 2351 Heston Dr, Lake Milton, OH 44429 (2bd) | Lake Milton, OH | $299,999 | $39,321 | 8.2% | 5.3% | - |
+| 73 | 10528 Country Club Ln, Deerfield, OH 44449 (3bd) | Berlin Reservoir, OH | $275,000 | $36,500 | 8.0% | 5.0% | - |
+| 73 | 10685 Scotts Corner Rd, Diamond, OH 44412 (4bd) | Berlin Reservoir, OH | $308,500 | $40,880 | 8.0% | 5.1% | - |
+| 72 | 3525 Ross St, Stow, NY 14785 (2bd) | Bemus Point, NY (Chautauqua Lake) | $259,000 | $36,135 | 7.8% | 4.8% | - |
+| 71 | 55 Center St, Bemus Point, NY 14712 (4bd) | Bemus Point, NY (Chautauqua Lake) | $289,000 | $45,990 | 9.4% | 5.9% | In village limits - verify STR zoning / density cap |
+| 69 | 1075 Ne River Rd, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $375,000 | $44,731 | 7.3% | 4.6% | - |
+| 69 | 1075 River Rd, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $375,000 | $44,731 | 7.3% | 4.6% | - |
+| 68 | 10029 Cummins Dr, Deerfield, OH 44411 (2bd) | Berlin Reservoir, OH | $259,900 | $32,120 | 7.2% | 4.5% | - |
+| 67 | 5541 Summit Ave, Bemus Point, NY 14712 (3bd) | Bemus Point, NY (Chautauqua Lake) | $275,000 | $41,062 | 8.6% | 5.3% | In village limits - verify STR zoning / density cap |
+| 65 | 13929 W Western Reserve Rd, Salem, OH 44460 (3bd) | Berlin Reservoir, OH | $320,000 | $36,500 | 6.6% | 4.1% | - |
+| 65 | 16810 Heiser Rd, Berlin Center, OH 44401 (3bd) | Berlin Reservoir, OH | $320,000 | $36,500 | 6.6% | 4.1% | - |
+| 64 | 33 Maple St, Bemus Point, NY 14712 (5bd) | Bemus Point, NY (Chautauqua Lake) | $359,000 | $50,918 | 8.1% | 5.0% | In village limits - verify STR zoning / density cap |
+| 64 | 2811 Chautauqua Ave, Ashville, NY 14710 (2bd) | Bemus Point, NY (Chautauqua Lake) | $299,900 | $36,135 | 6.4% | 3.8% | - |
+| 64 | 5591 Eke Rd, Ashville, NY 14710 (2bd) | Bemus Point, NY (Chautauqua Lake) | $299,900 | $36,135 | 6.4% | 3.8% | - |
+| 63 | 22525 Smith Rd NW, North Benton, OH 44449 (6bd) | Berlin Reservoir, OH | $449,900 | $49,640 | 6.3% | 3.9% | - |
+| 62 | 17991 Mahoning Ave, Lake Milton, OH 44429 (3bd) | Lake Milton, OH | $425,000 | $44,731 | 6.2% | 3.8% | - |
+| 61 | 2718 Route, 394, Ashville, NY 14710 (4bd) | Bemus Point, NY (Chautauqua Lake) | $399,000 | $45,990 | 6.0% | 3.5% | - |
+| 60 | 2570 Route, 394, Ashville, NY 14710 (4bd) | Bemus Point, NY (Chautauqua Lake) | $410,000 | $45,990 | 5.8% | 3.3% | - |
+| 60 | 2861 North Rd, Findley Lake, NY 14781 (2bd) | Findley Lake / Peek'n Peak, NY | $144,900 | $19,710 | 5.9% | 2.9% | - |
+| 59 | Lakeview St, Lake Milton, OH 44429 (0bd) | Lake Milton, OH | $449,999 | $44,731 | 5.7% | 3.5% | - |
+| 59 | 6590 Duck Creek Rd, Berlin Center, OH 44401 (3bd) | Berlin Reservoir, OH | $359,900 | $36,500 | 5.7% | 3.4% | - |
+| 59 | 3969 Route, 394, Mayville, NY 14757 (4bd) | Bemus Point, NY (Chautauqua Lake) | $349,500 | $45,990 | 7.3% | 4.4% | In village limits - verify STR zoning / density cap |
+| 58 | 5115 Spring St, Ashville, NY 14710 (4bd) | Bemus Point, NY (Chautauqua Lake) | $425,000 | $45,990 | 5.5% | 3.1% | - |
+| 58 | 3190 Route, 394, Ashville, NY 14710 (4bd) | Bemus Point, NY (Chautauqua Lake) | $424,000 | $45,990 | 5.5% | 3.1% | - |
+| 52 | 3972 N Everett Ave, Bemus Point, NY 14712 (3bd) | Bemus Point, NY (Chautauqua Lake) | $349,000 | $41,062 | 6.2% | 3.6% | In village limits - verify STR zoning / density cap |
+| 46 | 5113 Maple Springs Ellery Rd, Bemus Point, NY 14712 (5bd) | Bemus Point, NY (Chautauqua Lake) | $484,000 | $50,918 | 5.2% | 2.9% | In village limits - verify STR zoning / density cap |
+| 45 | 5480 Scandia Dr, Bemus Point, NY 14712 (3bd) | Bemus Point, NY (Chautauqua Lake) | $399,500 | $41,062 | 5.1% | 2.8% | In village limits - verify STR zoning / density cap |
+| 45 | 3949 And 3951 S Nesmith Ave, Bemus Point, NY 14712 (3bd) | Bemus Point, NY (Chautauqua Lake) | $399,500 | $41,062 | 5.1% | 2.8% | In village limits - verify STR zoning / density cap |
 
 ## Flagged / did not pass
 
 | Score | Property | Market | Price | Cap (self) | Why |
 |---|---|---|---|---|---|
-| 64 | 17544 Pine Ct, Lake Milton, OH | Lake Milton, OH | $839,900 | 3.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
-| 50 | 12 Lakeside Dr, Bemus Point, NY | Bemus Point, NY (Chautauqua Lake) | $675,000 | 3.3% | In village limits - verify STR zoning / density cap; Dock/waterfront - confirm dock is DEEDED, not a leased slip |
-| 18 | 8024 Northgate, Clymer, NY | Findley Lake / Peek'n Peak, NY | $250,000 | 0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 54 | Normandy Rd, Lake Milton, OH 44429 | Lake Milton, OH | $499,999 | 4.9% | cap 4.9% below threshold |
+| 53 | Leffingwell Rd, North Benton, OH 44449 | Berlin Reservoir, OH | $410,000 | 4.7% | cap 4.7% below threshold |
+| 53 | 3111 Chautauqua Ave, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $369,000 | 4.7% | cap 4.7% below threshold |
+| 52 | 10601 Old Rte, 89, North East, PA 16428 | Findley Lake / Peek'n Peak, NY | $199,900 | 4.5% | cap 4.5% below threshold |
+| 51 | 16842 Milton Ave, Lake Milton, OH 44429 | Lake Milton, OH | $479,000 | 4.3% | cap 4.3% below threshold |
+| 50 | 9388 Pearl Dr, North Benton, OH 44449 | Berlin Reservoir, OH | $439,900 | 4.2% | cap 4.2% below threshold |
+| 50 | 429 Hickory Grove Rd, Deerfield, OH 44411 | Berlin Reservoir, OH | $450,000 | 4.1% | cap 4.1% below threshold |
+| 50 | 1460 Bonner Rd, Deerfield, OH 44411 | Berlin Reservoir, OH | $335,000 | 4.1% | cap 4.1% below threshold |
+| 50 | 11 Chautauqua Escapes, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $395,000 | 4.2% | cap 4.2% below threshold |
+| 48 | 2972 Chautauqua Ave, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $475,000 | 3.8% | cap 3.8% below threshold |
+| 47 | 9277 German Church Rd, North Benton, OH 44449 | Berlin Reservoir, OH | $479,900 | 3.7% | cap 3.7% below threshold |
+| 46 | Diagonal Rd, Salem, OH 44460 | Berlin Reservoir, OH | $499,000 | 3.5% | cap 3.5% below threshold |
+| 45 | 4008 Stetson Rd, Ripley, NY 14775 | Findley Lake / Peek'n Peak, NY | $240,000 | 3.4% | cap 3.4% below threshold |
+| 44 | 506 Milton Commons Blvd, Lake Milton, OH 44429 | Lake Milton, OH | $373,900 | 4.9% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 44 | 700 Stillwater Dr, Deerfield, OH 44411 | Berlin Reservoir, OH | $525,000 | 3.2% | cap 3.2% below threshold |
+| 43 | 17020 Heiser Rd, Berlin Center, OH 44401 | Berlin Reservoir, OH | $619,000 | 2.9% | cap 2.9% below threshold |
+| 42 | 4986 Sunrise Dr, Unit L25, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $629,000 | 2.8% | cap 2.8% below threshold |
+| 42 | 10429 Main St, Findley Lake, NY 14736 | Findley Lake / Peek'n Peak, NY | $265,000 | 2.8% | cap 2.8% below threshold |
+| 40 | 664 Pine Dr, Lake Milton, OH 44429 | Lake Milton, OH | $839,900 | 2.6% | cap 2.6% below threshold |
+| 40 | Ohio Dr, Lake Milton, OH 44429 | Lake Milton, OH | $770,000 | 2.4% | cap 2.4% below threshold |
+| 40 | 17550 Mock Rd, Berlin Center, OH 44401 | Berlin Reservoir, OH | $599,000 | 2.5% | cap 2.5% below threshold |
+| 40 | 5809 Magnolia Rd, Mayville, NY 14757 | Bemus Point, NY (Chautauqua Lake) | $498,999 | 4.2% | In village limits - verify STR zoning / density cap |
+| 40 | 2796 N Main St, Findley Lake, NY 14736 | Findley Lake / Peek'n Peak, NY | $249,900 | 2.4% | cap 2.4% below threshold |
+| 38 | 1731 State Rte, 225, Deerfield, OH 44411 | Berlin Reservoir, OH | $735,500 | 2.1% | cap 2.1% below threshold |
+| 38 | 4847 Chautauqua Ave, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $469,900 | 3.9% | In village limits - verify STR zoning / density cap |
+| 37 | 568 Lakeview Blvd, Unit 568, Lake Milton, OH 44429 | Lake Milton, OH | $450,000 | 3.7% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 37 | 3881 Dutch Hollow Rd, Jamestown, NY 14701 | Bemus Point, NY (Chautauqua Lake) | $875,000 | 2.0% | cap 2.0% below threshold |
+| 37 | 5 Summit Park Dr, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $599,900 | 3.7% | In village limits - verify STR zoning / density cap |
+| 36 | 13 Merz Ave, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $498,000 | 3.5% | In village limits - verify STR zoning / density cap |
+| 35 | 1949 Craig Dr, Lake Milton, OH 44429 | Lake Milton, OH | $635,000 | 3.3% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 34 | 1939 Craig Dr, Lake Milton, OH 44429 | Lake Milton, OH | $570,000 | 3.2% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 34 | Ohio Dr, Lake Milton, OH 44429 | Berlin Reservoir, OH | $770,000 | 1.5% | cap 1.5% below threshold |
+| 34 | 4406 W Lake Rd, Unit 24, Mayville, NY 14757 | Bemus Point, NY (Chautauqua Lake) | $354,000 | 4.8% | Condo/HOA/gated - CONFIRM the association permits STR; In village limits - verify STR zoning / density cap |
+| 34 | 5464 Crestwood Rd, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $649,900 | 3.1% | In village limits - verify STR zoning / density cap |
+| 33 | 500 Bellview Dr, North Benton, OH 44449 | Berlin Reservoir, OH | $725,000 | 1.3% | cap 1.3% below threshold |
+| 33 | 2143 Shadyside Rd, Findley Lake, NY 14736 | Findley Lake / Peek'n Peak, NY | $359,000 | 1.4% | cap 1.4% below threshold |
+| 33 | 10149 Ne Sherman Rd, Ripley, NY 14775 | Findley Lake / Peek'n Peak, NY | $369,900 | 1.3% | cap 1.3% below threshold |
+| 31 | 17544 Pine Ct, Lake Milton, OH 44429 | Lake Milton, OH | $839,900 | 1.0% | cap 1.0% below threshold |
+| 31 | 4896 Ashville Bay Rd, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $925,000 | 0.9% | cap 0.9% below threshold |
+| 31 | 3941 Route, 430, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $499,000 | 2.7% | In village limits - verify STR zoning / density cap |
+| 30 | 3539 Morley Rd, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $950,000 | 0.8% | cap 0.8% below threshold |
+| 29 | 2166 Ne River Rd, Lake Milton, OH 44429 | Lake Milton, OH | $1,589,000 | 0.6% | cap 0.6% below threshold |
+| 28 | 1614 Ne River Rd, Lake Milton, OH 44429 | Lake Milton, OH | $1,300,000 | 0.6% | cap 0.6% below threshold |
+| 28 | Luce Rd, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $619,000 | 2.2% | In village limits - verify STR zoning / density cap |
+| 28 | 15 Main St, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $849,900 | 2.2% | In village limits - verify STR zoning / density cap |
+| 28 | 9822 Pa 89 Rte, North East, PA 16428 | Findley Lake / Peek'n Peak, NY | $499,900 | 0.5% | cap 0.5% below threshold |
+| 25 | 2612 Route, 394, Ashville, NY 14710 | Bemus Point, NY (Chautauqua Lake) | $1,799,000 | -1.2% | cap -1.2% below threshold |
+| 25 | 2278 W Mina Rd, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $1,999,900 | -2.1% | cap -2.1% below threshold |
+| 25 | 9467 Reagan Rd, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $599,900 | -0.6% | cap -0.6% below threshold |
+| 25 | 10920 Townline Rd, North East, PA 16428 | Findley Lake / Peek'n Peak, NY | $525,000 | 0.0% | cap 0.0% below threshold |
+| 25 | 2545 A Unit A And B Parsonage Rd, Findley Lake, NY 14736 | Findley Lake / Peek'n Peak, NY | $765,000 | -0.2% | cap -0.2% below threshold |
+| 25 | 1423 Conway Rd, Unit 3104, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1417 Conway Rd, Unit 3203, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1403 Conway Rd, Unit 5203, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1401 Conway Rd, Unit 5103, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1421 Conway Rd, Unit 3204, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1407 Conway Rd, Unit 5204, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1419 Conway Rd, Unit 3103, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 25 | 1405 Conway Rd, Unit 5104, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $225,000 | 1.6% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 23 | 4420 Lakeside Dr, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $825,000 | 1.4% | In village limits - verify STR zoning / density cap |
+| 23 | 1411 Conway Rd, Unit 4103, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $245,000 | 1.3% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 23 | 1413 Conway Rd, Unit 4204, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $245,000 | 1.3% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 23 | 1409 Conway Rd, Unit 4203, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $245,000 | 1.3% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 23 | 1415 Conway Rd, Unit 4104, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $245,000 | 1.3% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 19 | 3943 Route, 394, Mayville, NY 14757 | Bemus Point, NY (Chautauqua Lake) | $649,900 | 0.7% | In village limits - verify STR zoning / density cap |
+| 18 | 8034 Abbey Ln, Unit 8034, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $255,000 | 0.4% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 18 | 8024 Northgate I Hwy, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $250,000 | 0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 18 | 8024 Northgate 1, Unit 8024, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $250,000 | 0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 17 | 4957 Main St, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $989,000 | 0.3% | In village limits - verify STR zoning / density cap |
+| 17 | 8030 Northgate Ii Rd, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $259,999 | 0.4% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 17 | 8030 Northgate Ii Dr, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $259,999 | 0.4% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 15 | 4028 W Lake Rd, Mayville, NY 14757 | Bemus Point, NY (Chautauqua Lake) | $3,200,000 | -1.6% | In village limits - verify STR zoning / density cap |
+| 15 | 320 Lakeside Dr, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $2,295,000 | -1.4% | In village limits - verify STR zoning / density cap |
+| 15 | 8303 Canterbury Dr, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $698,000 | -1.1% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 15 | 8524 Ridgeview, Unit 8524, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $595,000 | -0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 15 | 8524 Ridgeview Dr, Clymer, NY 14724 | Findley Lake / Peek'n Peak, NY | $595,000 | -0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+| 11 | 50 Lakeside Dr, Apt B201, Bemus Point, NY 14712 | Bemus Point, NY (Chautauqua Lake) | $685,000 | 1.0% | Condo/HOA/gated - CONFIRM the association permits STR; In village limits - verify STR zoning / density cap |
 
 ---
 _Assumptions and thresholds live in `src/config.py`. ADR/occupancy are market estimates unless an AirDNA key is set._
