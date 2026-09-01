@@ -1,0 +1,26 @@
+# STR Deal Scout - weekly digest (2026-08-20)
+
+> **DEMO MODE** - showing built-in sample listings. Add a `RENTCAST_API_KEY` secret for live data.
+
+Scanned 4 lakes. **3 candidate(s) passed** the filters; 3 flagged for review.
+
+_The agent reports; it does not decide. Verify every flag - leasehold, zoning, dock ownership, HOA STR rules - before an offer._
+
+## Candidates that passed
+
+| Score | Property | Market | Price | Gross | Cap (self) | Cap (pro) | Notes |
+|---|---|---|---|---|---|---|---|
+| 100 | 259 NE River Rd, Lake Milton, OH (3bd) | Lake Milton, OH | $295,000 | $51,388 | 11.8% | 7.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+| 78 | 10024 Cummins Ln, Berlin Center, OH (3bd) | Berlin Reservoir, OH | $389,000 | $41,975 | 6.3% | 3.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+| 67 | 506 Milton Commons Blvd A6, Lake Milton, OH (2bd) | Lake Milton, OH | $379,500 | $45,355 | 6.2% | 3.5% | Condo/HOA/gated - CONFIRM the association permits STR; Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+
+## Flagged / did not pass
+
+| Score | Property | Market | Price | Cap (self) | Why |
+|---|---|---|---|---|---|
+| 64 | 17544 Pine Ct, Lake Milton, OH | Lake Milton, OH | $839,900 | 3.9% | Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+| 50 | 12 Lakeside Dr, Bemus Point, NY | Bemus Point, NY (Chautauqua Lake) | $675,000 | 3.3% | In village limits - verify STR zoning / density cap; Dock/waterfront - confirm dock is DEEDED, not a leased slip |
+| 18 | 8024 Northgate, Clymer, NY | Findley Lake / Peek'n Peak, NY | $250,000 | 0.5% | Condo/HOA/gated - CONFIRM the association permits STR |
+
+---
+_Assumptions and thresholds live in `src/config.py`. ADR/occupancy are market estimates unless an AirDNA key is set._

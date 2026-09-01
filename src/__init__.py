@@ -1,0 +1,1 @@
+# STR Deal Scout package
