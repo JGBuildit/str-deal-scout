@@ -45,11 +45,11 @@ jobs:
           name: str-digest
           path: digests/latest.md
 
-      - name: Save the Excel workbook as a downloadable artifact
+      - name: Save the interactive dashboard as a downloadable artifact
         uses: actions/upload-artifact@v7
         with:
-          name: str-digest-excel
-          path: digests/latest.xlsx
+          name: str-dashboard
+          path: digests/latest.html
 
       - name: Commit the digest back to the repo
         run: |
