@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -40,10 +40,16 @@ jobs:
             --body-file "${{ steps.scout.outputs.digest_path }}"
 
       - name: Save the digest as a downloadable artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: str-digest
           path: digests/latest.md
+
+      - name: Save the Excel workbook as a downloadable artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: str-digest-excel
+          path: digests/latest.xlsx
 
       - name: Commit the digest back to the repo
         run: |
