@@ -77,6 +77,19 @@ MARKETS = [
 ]
 
 # ---------------------------------------------------------------------------
+# EXCLUSION RULES  (listings filtered out before scoring - logged to the
+# Excel export's "Excluded" sheet instead of showing up as a candidate)
+# ---------------------------------------------------------------------------
+# Matched against the listing's property type (substring, case-insensitive).
+# There's no structure to underwrite an STR on land, and mobile homes are
+# rarely financeable/insurable the way this model assumes.
+EXCLUDE_PROPERTY_TYPES = ["land", "mobile"]
+
+# Below this price a listing in our markets is almost never a real
+# fee-simple home - usually a land parcel, teardown, or data error.
+MIN_PRICE = 100_000
+
+# ---------------------------------------------------------------------------
 # RED-FLAG KEYWORDS  (scanned in the listing type + description)
 # ---------------------------------------------------------------------------
 # Leasehold = you don't own the land (deal-killer for STR income). Includes
