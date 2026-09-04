@@ -3,7 +3,8 @@ main.py
 =======
 Orchestrates one weekly run:
   1. For each lake, fetch active listings (live RentCast or demo data).
-  2. Drop listings that are land / mobile / under $100k before scoring.
+  2. Drop listings that are land / mobile / under $100k / not waterfront,
+     before scoring.
   3. Score + flag each remaining listing against the rubric.
   4. Build a Markdown digest and an interactive HTML dashboard, and write
      them to /digests.
@@ -15,7 +16,7 @@ Run locally with:  python -m src.main
 import os
 from datetime import date
 
-from .config import MARKETS, EXCLUDE_PROPERTY_TYPES, MIN_PRICE
+from .config import MARKETS, EXCLUDE_PROPERTY_TYPES, MIN_PRICE, DOCK_KEYWORDS
 from .sources import fetch_listings
 from .score import score_listing
 from .digest import build_digest
@@ -25,6 +26,7 @@ from .dashboard import build_dashboard_html
 def _exclusion_reason(listing: dict) -> str:
     """Why a listing should be dropped before scoring, or "" to keep it."""
     property_type = (listing.get("property_type") or "").lower()
+    text = f"{property_type} {listing.get('description', '')}".lower()
     price = listing.get("price") or 0
 
     reasons = []
@@ -32,6 +34,8 @@ def _exclusion_reason(listing: dict) -> str:
         reasons.append(f"property type: {listing.get('property_type')}")
     if price < MIN_PRICE:
         reasons.append(f"price under ${MIN_PRICE:,.0f}")
+    if not any(kw in text for kw in DOCK_KEYWORDS):
+        reasons.append("not waterfront")
     return "; ".join(reasons)
 
 
