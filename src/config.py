@@ -78,7 +78,7 @@ MARKETS = [
 
 # ---------------------------------------------------------------------------
 # EXCLUSION RULES  (listings filtered out before scoring - logged to the
-# Excel export's "Excluded" sheet instead of showing up as a candidate)
+# dashboard's "Excluded" tab instead of showing up as a candidate)
 # ---------------------------------------------------------------------------
 # Matched against the listing's property type (substring, case-insensitive).
 # There's no structure to underwrite an STR on land, and mobile homes are
@@ -88,6 +88,10 @@ EXCLUDE_PROPERTY_TYPES = ["land", "mobile"]
 # Below this price a listing in our markets is almost never a real
 # fee-simple home - usually a land parcel, teardown, or data error.
 MIN_PRICE = 100_000
+
+# Only lakefront/waterfront listings move forward - it's the single biggest
+# driver of nightly rate, and the whole point of these markets. Matched
+# against DOCK_KEYWORDS below (property type + description).
 
 # ---------------------------------------------------------------------------
 # RED-FLAG KEYWORDS  (scanned in the listing type + description)
