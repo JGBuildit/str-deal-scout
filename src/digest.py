@@ -22,7 +22,7 @@ def _pct(n):
         return "-"
 
 
-def build_digest(candidates: list, mode: str) -> str:
+def build_digest(candidates: list, mode: str, market_count: int) -> str:
     today = date.today().isoformat()
     passed = [c for c in candidates if c["passed"]]
     flagged = [c for c in candidates if not c["passed"]]
@@ -36,7 +36,7 @@ def build_digest(candidates: list, mode: str) -> str:
         lines.append("> **DEMO MODE** - showing built-in sample listings. "
                      "Add a `RENTCAST_API_KEY` secret for live data.")
         lines.append("")
-    lines.append(f"Scanned 4 lakes. **{len(passed)} candidate(s) passed** the "
+    lines.append(f"Scanned {market_count} market(s). **{len(passed)} candidate(s) passed** the "
                  f"filters; {len(flagged)} flagged for review.")
     lines.append("")
     lines.append("_The agent reports; it does not decide. Verify every flag - "

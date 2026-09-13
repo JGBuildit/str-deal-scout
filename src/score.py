@@ -21,7 +21,11 @@ from .model import run_model
 
 
 def _text(listing: dict) -> str:
-    return f"{listing.get('property_type','')} {listing.get('description','')}".lower()
+    # Normalize hyphens to spaces so "Gulf-front"/"bay-front" style compounds
+    # (common in coastal MLS descriptions) still match keyword lists that use
+    # a space or no separator at all.
+    text = f"{listing.get('property_type','')} {listing.get('description','')}".lower()
+    return text.replace("-", " ")
 
 
 def _has(text: str, words) -> bool:

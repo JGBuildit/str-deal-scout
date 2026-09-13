@@ -4,11 +4,13 @@ config.py
 All the knobs you might want to change live here. Edit the numbers,
 save the file, commit — the agent picks up the changes on its next run.
 
-Each MARKET describes one lake: where to search, what short-term-rental
-(STR) performance to assume, and which words in a listing should raise a
-red flag. The revenue/occupancy numbers are the market-level estimates we
-researched; if you add an AirDNA API key later they get replaced with live
-address-level data automatically.
+Each MARKET describes one place to scan - a lake, a beach peninsula, a ski
+town - where to search, what short-term-rental (STR) performance to assume,
+and which words in a listing should raise a red flag. The revenue/occupancy
+numbers are market-level estimates; if you add an AirDNA API key later they
+get replaced with live address-level data automatically. Markets added
+without hands-on local research are flagged in their "notes" - verify ADR/
+occ against AirDNA/Rabbu comps before underwriting off them.
 """
 
 # ---------------------------------------------------------------------------
@@ -30,13 +32,14 @@ ASSUMPTIONS = {
 MIN_CAP_RATE = 0.05           # 5.0%
 
 # ---------------------------------------------------------------------------
-# THE FOUR LAKES
+# THE MARKETS
 # ---------------------------------------------------------------------------
 # lat/lng/radius_miles define the RentCast search circle.
 # adr / occ are market STR assumptions (fallback when no AirDNA key).
 # tax_rate is the effective property-tax rate for that state/county.
 # village_names: if a listing's city matches, flag it to VERIFY zoning /
-#                village STR caps before assuming it's rentable.
+#                village STR caps before assuming it's rentable (also used
+#                for Breckenridge's STR-license cap, not just NY/OH villages).
 MARKETS = [
     {
         "key": "lake_milton",
@@ -74,6 +77,63 @@ MARKETS = [
         "village_names": [],
         "notes": "Fee-simple, two-season (ski + lake). Confirm condo/resort rental-program rules at Peek'n Peak.",
     },
+    # -- Added without the hands-on comp research behind the four lakes above.
+    # ADR/occ are directional placeholders - pull real AirDNA/Rabbu comps
+    # before underwriting anything here.
+    {
+        "key": "cape_san_blas",
+        "label": "Cape San Blas, FL",
+        "state": "FL",
+        "lat": 29.6636, "lng": -85.3556, "radius_miles": 5.0,
+        "adr": 290, "occ": 0.52, "tax_rate": 0.008,
+        "village_names": [],
+        "notes": "Gulf-front beach market, unincorporated Gulf County. UNVERIFIED ADR/occ estimate. "
+                 "Hurricane wind/flood insurance here will likely blow past the global insurance_rate/"
+                 "insurance_floor assumptions in model.py - get a real quote before underwriting.",
+    },
+    {
+        "key": "st_joe_peninsula",
+        "label": "St. Joseph Peninsula, FL",
+        "state": "FL",
+        "lat": 29.7553, "lng": -85.3956, "radius_miles": 8.0,
+        "adr": 250, "occ": 0.48, "tax_rate": 0.008,
+        "village_names": [],
+        "notes": "Peninsula north of Cape San Blas (overlapping search area), bay-side + gulf-side mix. "
+                 "UNVERIFIED ADR/occ estimate. Same wind/flood insurance caveat as Cape San Blas.",
+    },
+    {
+        "key": "alligator_point",
+        "label": "Alligator Point, FL",
+        "state": "FL",
+        "lat": 29.9050, "lng": -84.4170, "radius_miles": 4.0,
+        "adr": 220, "occ": 0.42, "tax_rate": 0.008,
+        "village_names": [],
+        "notes": "Quieter Franklin County gulf-front community, less premium than Cape San Blas. "
+                 "UNVERIFIED ADR/occ estimate. Same wind/flood insurance caveat as Cape San Blas.",
+    },
+    {
+        "key": "breckenridge",
+        "label": "Breckenridge, CO",
+        "state": "CO",
+        "lat": 39.5097, "lng": -106.0400, "radius_miles": 6.0,
+        "adr": 380, "occ": 0.55, "tax_rate": 0.005,
+        "village_names": ["Breckenridge"],
+        "notes": "Ski-town market, not waterfront - the pipeline's waterfront-only filter will exclude "
+                 "nearly everything here unless a listing is on the Blue River / near Lake Dillon. "
+                 "Breckenridge also caps new STR licenses by neighborhood/type (1/2/3); CONFIRM a "
+                 "license is actually obtainable before assuming any STR income. UNVERIFIED ADR/occ.",
+    },
+    {
+        "key": "norris_lake",
+        "label": "Norris Lake, TN",
+        "state": "TN",
+        "lat": 36.2927, "lng": -83.9109, "radius_miles": 12.0,
+        "adr": 260, "occ": 0.45, "tax_rate": 0.006,
+        "village_names": [],
+        "notes": "Large TVA reservoir spanning Union/Campbell/Claiborne counties - wide search radius "
+                 "to cover multiple marinas/coves. TVA (not Army Corps) shoreline rules apply; docks "
+                 "often need a TVA permit. UNVERIFIED ADR/occ estimate.",
+    },
 ]
 
 # ---------------------------------------------------------------------------
@@ -108,7 +168,13 @@ CONDO_KEYWORDS = [
     "homeowners association",
 ]
 # A deeded dock/waterfront is the single biggest driver of nightly rate.
+# Includes gulf/ocean-front phrasing for the FL beach markets, not just lake
+# terms - otherwise genuine beachfront listings get wrongly excluded by the
+# waterfront-only filter in main.py for not saying "waterfront" specifically.
 DOCK_KEYWORDS = [
     "dock", "boat slip", "boat lift", "waterfront", "lakefront",
     "lake front", "water frontage", "private beach", "shoreline",
+    "beachfront", "beach front", "gulf front", "gulffront",
+    "oceanfront", "ocean front", "bayfront", "bay front", "river front",
+    "riverfront",
 ]

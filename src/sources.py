@@ -130,4 +130,34 @@ SAMPLE_LISTINGS = {
          "property_type": "Condo", "url": "", "days_on_market": 21,
          "description": "Slopeside ski-in/ski-out condo at Peek'n Peak. Association/HOA applies."},
     ],
+    "cape_san_blas": [
+        {"address": "3208 Cape San Blas Rd, Port St. Joe, FL", "city": "Port St. Joe", "state": "FL",
+         "price": 895000, "bedrooms": 4, "bathrooms": 3, "sqft": 2100,
+         "property_type": "Single Family", "url": "", "days_on_market": 27,
+         "description": "Gulf front beach house with private beach access and elevator."},
+    ],
+    "st_joe_peninsula": [
+        {"address": "1500 Cape San Blas Rd, Port St. Joe, FL", "city": "Port St. Joe", "state": "FL",
+         "price": 650000, "bedrooms": 3, "bathrooms": 2, "sqft": 1750,
+         "property_type": "Single Family", "url": "", "days_on_market": 44,
+         "description": "Bay-front home on the peninsula, short golf cart ride to the gulf beaches."},
+    ],
+    "alligator_point": [
+        {"address": "1215 Alligator Dr, Alligator Point, FL", "city": "Alligator Point", "state": "FL",
+         "price": 540000, "bedrooms": 3, "bathrooms": 2, "sqft": 1500,
+         "property_type": "Single Family", "url": "", "days_on_market": 58,
+         "description": "Gulf front cottage, quiet stretch of Alligator Point beach."},
+    ],
+    "breckenridge": [
+        {"address": "150 Ski Hill Rd, Breckenridge, CO", "city": "Breckenridge", "state": "CO",
+         "price": 925000, "bedrooms": 2, "bathrooms": 2, "sqft": 1100,
+         "property_type": "Condo", "url": "", "days_on_market": 15,
+         "description": "Ski-in/ski-out condo near the base area. HOA applies; verify STR license availability."},
+    ],
+    "norris_lake": [
+        {"address": "440 Marina Rd, Maynardville, TN", "city": "Maynardville", "state": "TN",
+         "price": 575000, "bedrooms": 3, "bathrooms": 2, "sqft": 1900,
+         "property_type": "Single Family", "url": "", "days_on_market": 19,
+         "description": "Lakefront home on Norris Lake with private dock, walk-in water access."},
+    ],
 }

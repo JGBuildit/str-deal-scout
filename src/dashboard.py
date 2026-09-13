@@ -66,7 +66,7 @@ def _json_for_script(data) -> str:
     return json.dumps(data).replace("</", "<\\/")
 
 
-def build_dashboard_html(candidates: list, excluded: list, mode: str) -> str:
+def build_dashboard_html(candidates: list, excluded: list, mode: str, market_count: int) -> str:
     today = date.today().isoformat()
     candidate_rows = [_candidate_row(c) for c in candidates]
     excluded_rows = [_excluded_row(e) for e in excluded]
@@ -166,14 +166,14 @@ def build_dashboard_html(candidates: list, excluded: list, mode: str) -> str:
 <body>
 
 <h1>STR Deal Scout - weekly dashboard</h1>
-<p class="subtitle">{today} - scanned 4 lakes.</p>
+<p class="subtitle">{today} - scanned {market_count} market(s).</p>
 {demo_banner}
 
 <div class="summary">
   <div class="stat"><div class="n">{len(candidate_rows)}</div><div class="l">Total scored</div></div>
   <div class="stat"><div class="n">{passed_count}</div><div class="l">Passed filters</div></div>
   <div class="stat"><div class="n">{len(candidate_rows) - passed_count}</div><div class="l">Flagged</div></div>
-  <div class="stat"><div class="n">{len(excluded_rows)}</div><div class="l">Excluded (land/mobile/under $100k)</div></div>
+  <div class="stat"><div class="n">{len(excluded_rows)}</div><div class="l">Excluded (land/mobile/under $100k/not waterfront)</div></div>
 </div>
 
 <div class="tabs">

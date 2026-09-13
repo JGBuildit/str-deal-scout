@@ -2,7 +2,7 @@
 main.py
 =======
 Orchestrates one weekly run:
-  1. For each lake, fetch active listings (live RentCast or demo data).
+  1. For each market, fetch active listings (live RentCast or demo data).
   2. Drop listings that are land / mobile / under $100k / not waterfront,
      before scoring.
   3. Score + flag each remaining listing against the rubric.
@@ -26,7 +26,9 @@ from .dashboard import build_dashboard_html
 def _exclusion_reason(listing: dict) -> str:
     """Why a listing should be dropped before scoring, or "" to keep it."""
     property_type = (listing.get("property_type") or "").lower()
-    text = f"{property_type} {listing.get('description', '')}".lower()
+    # Normalize hyphens to spaces so "Gulf-front"/"bay-front" style compounds
+    # still match DOCK_KEYWORDS (same normalization score.py's _text does).
+    text = f"{property_type} {listing.get('description', '')}".lower().replace("-", " ")
     price = listing.get("price") or 0
 
     reasons = []
@@ -63,7 +65,7 @@ def run() -> str:
             if scored:
                 all_candidates.append(scored)
 
-    digest_md = build_digest(all_candidates, overall_mode)
+    digest_md = build_digest(all_candidates, overall_mode, len(MARKETS))
 
     os.makedirs("digests", exist_ok=True)
     dated_path = os.path.join("digests", f"{date.today().isoformat()}.md")
@@ -72,7 +74,7 @@ def run() -> str:
         with open(path, "w", encoding="utf-8") as f:
             f.write(digest_md)
 
-    dashboard_html = build_dashboard_html(all_candidates, excluded_listings, overall_mode)
+    dashboard_html = build_dashboard_html(all_candidates, excluded_listings, overall_mode, len(MARKETS))
     dated_html = os.path.join("digests", f"{date.today().isoformat()}.html")
     latest_html = os.path.join("digests", "latest.html")
     for path in (dated_html, latest_html):
