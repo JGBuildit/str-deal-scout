@@ -40,6 +40,9 @@ MIN_CAP_RATE = 0.05           # 5.0%
 # village_names: if a listing's city matches, flag it to VERIFY zoning /
 #                village STR caps before assuming it's rentable (also used
 #                for Breckenridge's STR-license cap, not just NY/OH villages).
+# require_waterfront: defaults to True (see EXCLUSION RULES below). Set False
+#                only for a market where waterfront isn't the value driver -
+#                currently just Breckenridge, a ski town.
 MARKETS = [
     {
         "key": "lake_milton",
@@ -118,10 +121,11 @@ MARKETS = [
         "lat": 39.5097, "lng": -106.0400, "radius_miles": 6.0,
         "adr": 380, "occ": 0.55, "tax_rate": 0.005,
         "village_names": ["Breckenridge"],
-        "notes": "Ski-town market, not waterfront - the pipeline's waterfront-only filter will exclude "
-                 "nearly everything here unless a listing is on the Blue River / near Lake Dillon. "
-                 "Breckenridge also caps new STR licenses by neighborhood/type (1/2/3); CONFIRM a "
-                 "license is actually obtainable before assuming any STR income. UNVERIFIED ADR/occ.",
+        "require_waterfront": False,  # ski town, not a waterfront market (see main.py's _exclusion_reason)
+        "notes": "Ski-town market, exempted from the waterfront-only filter (see require_waterfront). "
+                 "Its real gating factor is STR licensing, not water: Breckenridge caps new STR licenses "
+                 "by neighborhood/type (1/2/3); CONFIRM a license is actually obtainable before assuming "
+                 "any STR income. UNVERIFIED ADR/occ.",
     },
     {
         "key": "norris_lake",

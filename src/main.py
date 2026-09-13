@@ -3,8 +3,9 @@ main.py
 =======
 Orchestrates one weekly run:
   1. For each market, fetch active listings (live RentCast or demo data).
-  2. Drop listings that are land / mobile / under $100k / not waterfront,
-     before scoring.
+  2. Drop listings that are land / mobile / under $100k before scoring, and
+     (per-market, on by default - see MARKETS' require_waterfront) not
+     waterfront.
   3. Score + flag each remaining listing against the rubric.
   4. Build a Markdown digest and an interactive HTML dashboard, and write
      them to /digests.
@@ -23,7 +24,7 @@ from .digest import build_digest
 from .dashboard import build_dashboard_html
 
 
-def _exclusion_reason(listing: dict) -> str:
+def _exclusion_reason(listing: dict, market: dict) -> str:
     """Why a listing should be dropped before scoring, or "" to keep it."""
     property_type = (listing.get("property_type") or "").lower()
     # Normalize hyphens to spaces so "Gulf-front"/"bay-front" style compounds
@@ -36,7 +37,7 @@ def _exclusion_reason(listing: dict) -> str:
         reasons.append(f"property type: {listing.get('property_type')}")
     if price < MIN_PRICE:
         reasons.append(f"price under ${MIN_PRICE:,.0f}")
-    if not any(kw in text for kw in DOCK_KEYWORDS):
+    if market.get("require_waterfront", True) and not any(kw in text for kw in DOCK_KEYWORDS):
         reasons.append("not waterfront")
     return "; ".join(reasons)
 
@@ -53,7 +54,7 @@ def run() -> str:
             overall_mode = "demo"
         print(f"  {len(listings)} listing(s) [{mode}]")
         for listing in listings:
-            reason = _exclusion_reason(listing)
+            reason = _exclusion_reason(listing, market)
             if reason:
                 excluded_listings.append({
                     **listing,
