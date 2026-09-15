@@ -20,8 +20,9 @@ Breckenridge (CO), Norris Lake (TN).
    (RentCast API, or built-in demo data when no key is set).
 2. **Filter** – drops listings that are land/mobile, under $100k, or not
    waterfront, before they're scored (see `src/main.py`).
-3. **Enrich** – assigns a nightly rate + occupancy (AirDNA when available,
-   otherwise researched market estimates scaled by size/waterfront).
+3. **Enrich** – assigns a nightly rate + occupancy (AirROI when available,
+   else AirDNA, otherwise researched market estimates scaled by size/
+   waterfront).
 4. **Model** – runs the cap-rate model (`src/model.py`).
 5. **Score & flag** – applies the rubric in `src/score.py`
    (fee-simple only, flag condo/HOA, flag village limits, reward deeded dock,
@@ -36,8 +37,11 @@ python -m src.main          # demo mode with no keys
 ```
 
 ## Make it live
-Add repository **Secrets** named `RENTCAST_API_KEY` (and optionally
-`AIRDNA_API_KEY`). See **Setup-Guide.docx** for click-by-click instructions.
+Add a repository **Secret** named `RENTCAST_API_KEY`. For address-level ADR/
+occupancy (instead of the market-level estimates), also add `AIRROI_API_KEY`
+(self-serve, pay-as-you-go - sign up at airroi.com) and/or `AIRDNA_API_KEY`
+(enterprise-only, sales-gated; used only if `AIRROI_API_KEY` isn't set). See
+**Setup-Guide.docx** for click-by-click instructions.
 
 ## Change the settings
 Everything tunable lives in `src/config.py` – the markets, the ADR/occupancy

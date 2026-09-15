@@ -28,6 +28,7 @@ jobs:
         id: scout
         env:
           RENTCAST_API_KEY: ${{ secrets.RENTCAST_API_KEY }}
+          AIRROI_API_KEY: ${{ secrets.AIRROI_API_KEY }}
           AIRDNA_API_KEY: ${{ secrets.AIRDNA_API_KEY }}
         run: python -m src.main
 
