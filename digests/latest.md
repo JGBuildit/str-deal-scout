@@ -1,4 +1,4 @@
-# STR Deal Scout - weekly digest (2026-09-28)
+# STR Deal Scout - weekly digest (2026-10-12)
 
 Scanned 4 lakes. **0 candidate(s) passed** the filters; 0 flagged for review.
 
