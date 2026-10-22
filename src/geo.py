@@ -33,7 +33,9 @@ import requests
 
 OVERPASS_URLS = [
     "https://overpass-api.de/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",
 ]
 CACHE_DIR = os.environ.get("GEO_CACHE_DIR", ".geo_cache")
 USER_AGENT = "str-deal-scout/1.0 (personal property screening)"
@@ -226,9 +228,9 @@ def _clip(lat, lng, radius):
     return f"{lat - dlat:.5f},{lng - dlng:.5f},{lat + dlat:.5f},{lng + dlng:.5f}"
 
 
-def _near_query(lat, lng, radius, poi_radius):
-    clip = _clip(lat, lng, max(radius, poi_radius))
-    return f"""[out:json][timeout:40];
+def _water_query(lat, lng, radius):
+    clip = _clip(lat, lng, radius)
+    return f"""[out:json][timeout:25];
 (
   way(around:{radius},{lat},{lng})[natural=beach];
   way(around:{radius},{lat},{lng})[natural=coastline];
@@ -236,16 +238,29 @@ def _near_query(lat, lng, radius, poi_radius):
   rel(around:{radius},{lat},{lng})[natural=water][name];
   way(around:{radius},{lat},{lng})[natural=water][water=canal];
   way(around:{radius},{lat},{lng})[waterway=canal];
-  way(around:{radius},{lat},{lng})[highway~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link)$"];
-  way(around:60,{lat},{lng})[highway];
-  node(around:{poi_radius},{lat},{lng})[amenity~"^({AMENITY_POIS})$"];
 );
 out geom({clip}) tags;"""
 
 
+def _road_query(lat, lng, radius):
+    clip = _clip(lat, lng, radius)
+    return f"""[out:json][timeout:25];
+(
+  way(around:{radius},{lat},{lng})[highway~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link)$"];
+  way(around:60,{lat},{lng})[highway];
+);
+out geom({clip}) tags;"""
+
+
+def _poi_query(lat, lng, poi_radius):
+    return f"""[out:json][timeout:25];
+node(around:{poi_radius},{lat},{lng})[amenity~"^({AMENITY_POIS})$"];
+out body;"""
+
+
 def _ski_query(lat, lng, radius):
     clip = _clip(lat, lng, radius)
-    return f"""[out:json][timeout:40];
+    return f"""[out:json][timeout:25];
 (
   way(around:{radius},{lat},{lng})[aerialway~"^({LIFTS})$"];
   way(around:{radius},{lat},{lng})["piste:type"="downhill"];
@@ -253,31 +268,54 @@ def _ski_query(lat, lng, radius):
 out geom({clip}) tags;"""
 
 
+def _host(url):
+    return url.split("//", 1)[-1].split("/", 1)[0]
+
+
+def _post(url, query, timeout):
+    """One request to one server. Returns (elements, None) or (None, short_error)."""
+    t0 = time.time()
+    try:
+        r = requests.post(url, data={"data": query}, timeout=timeout,
+                          headers={"User-Agent": USER_AGENT})
+        dt = time.time() - t0
+        if r.status_code != 200:
+            body = " ".join(r.text.split())[:60]
+            return None, f"{_host(url)} HTTP {r.status_code} in {dt:.0f}s {body}"
+        try:
+            return r.json().get("elements", []), None
+        except ValueError:
+            return None, f"{_host(url)} bad JSON in {dt:.0f}s {' '.join(r.text.split())[:60]}"
+    except requests.exceptions.Timeout:
+        return None, f"{_host(url)} timeout after {time.time() - t0:.0f}s"
+    except Exception as e:  # noqa: BLE001
+        return None, f"{_host(url)} {type(e).__name__}"
+
+
 def _run(query):
+    """Run a query against each server in turn (twice round); cache successes."""
     os.makedirs(CACHE_DIR, exist_ok=True)
     path = os.path.join(CACHE_DIR, hashlib.sha1(query.encode()).hexdigest() + ".json")
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             return json.load(f)
-    last = None
+    errors = []
     for attempt in range(2):
         for url in OVERPASS_URLS:
-            try:
-                r = requests.post(url, data={"data": query}, timeout=50,
-                                  headers={"User-Agent": USER_AGENT})
-                if r.status_code in (429, 504):
-                    last = f"{url}: HTTP {r.status_code}"
-                    continue
-                r.raise_for_status()
-                data = r.json().get("elements", [])
+            data, err = _post(url, query, timeout=30)
+            if data is not None:
                 with open(path, "w", encoding="utf-8") as f:
                     json.dump(data, f)
-                time.sleep(1.0)  # be polite to the free public service
+                time.sleep(1.0)  # be polite to the free public services
                 return data
-            except Exception as e:  # noqa: BLE001
-                last = e
-        time.sleep(5 * (attempt + 1))
-    raise GeoUnavailable(str(last))
+            errors.append(err)
+        time.sleep(4 * (attempt + 1))
+    # De-duplicate while keeping order, and keep the message short for the digest.
+    seen = []
+    for e in errors:
+        if e not in seen:
+            seen.append(e)
+    raise GeoUnavailable(" | ".join(seen)[:400])
 
 
 def get_geo(lat, lng, rules):
@@ -291,7 +329,12 @@ def get_geo(lat, lng, rules):
     max_m = max([r.get("max_m", 0) for r in rules] + [300])
     poi_radius = max([r.get("radius_m", 0) for r in rules if r["signal"] == "walkable"] + [800])
     near_radius = int(max(1000, max_m * 2))
-    elements = _run(_near_query(lat, lng, near_radius, poi_radius))
+
+    elements = []
+    elements += _run(_water_query(lat, lng, near_radius))
+    elements += _run(_road_query(lat, lng, near_radius))
+    if any(r["signal"] == "walkable" for r in rules):
+        elements += _run(_poi_query(lat, lng, poi_radius))
 
     ski_elements = None
     ski_rules = [r for r in rules if r["signal"] == "ski"]

@@ -94,19 +94,61 @@ class GeometryTests(unittest.TestCase):
         self.assertFalse(geo.evaluate_location(g, [{"signal": "ski", "max_m": 400}])["ok"])
 
     def test_queries_clip_geometry_to_bbox(self):
-        q = geo._near_query(LAT0, LNG0, 1000, 800)
-        self.assertRegex(q, r"out geom\(30\.\d+,-86\.\d+,30\.\d+,-86\.\d+\) tags;")
-        s, w, n, e = [float(x) for x in q.split("out geom(")[1].split(")")[0].split(",")]
-        self.assertTrue(s < LAT0 < n and w < LNG0 < e)
+        for q in (geo._water_query(LAT0, LNG0, 1000), geo._road_query(LAT0, LNG0, 1000)):
+            self.assertRegex(q, r"out geom\(30\.\d+,-86\.\d+,30\.\d+,-86\.\d+\) tags;")
+            s, w, n, e = [float(x) for x in q.split("out geom(")[1].split(")")[0].split(",")]
+            self.assertTrue(s < LAT0 < n and w < LNG0 < e)
         self.assertRegex(geo._ski_query(LAT0, LNG0, 3000), r"out geom\(")
 
-    def test_retry_then_fail_raises(self):
+    def test_queries_are_split_and_small(self):
+        water = geo._water_query(LAT0, LNG0, 1000)
+        roads = geo._road_query(LAT0, LNG0, 1000)
+        pois = geo._poi_query(LAT0, LNG0, 800)
+        self.assertNotIn("highway", water)
+        self.assertNotIn("natural=beach", roads)
+        self.assertIn("amenity", pois)
+        self.assertIn("out body;", pois)
+
+    def test_failure_message_names_each_server(self):
+        def fake_post(url, data, timeout, headers):
+            raise geo.requests.exceptions.Timeout()
         with tempfile.TemporaryDirectory() as d, mock.patch.object(geo, "CACHE_DIR", d), \
-             mock.patch.object(geo.requests, "post", side_effect=OSError("down")) as post, \
+             mock.patch.object(geo.requests, "post", side_effect=fake_post), \
              mock.patch.object(geo.time, "sleep"):
-            with self.assertRaises(geo.GeoUnavailable):
+            with self.assertRaises(geo.GeoUnavailable) as cm:
                 geo._run("x")
-        self.assertEqual(post.call_count, 2 * len(geo.OVERPASS_URLS))
+        msg = str(cm.exception)
+        for url in geo.OVERPASS_URLS:
+            self.assertIn(geo._host(url), msg)
+        self.assertLessEqual(len(msg), 400)
+
+    def test_http_error_body_is_reported(self):
+        class R:
+            status_code = 429
+            text = "Too many requests, slow down"
+        with mock.patch.object(geo.requests, "post", return_value=R()):
+            data, err = geo._post("https://overpass-api.de/api/interpreter", "q", 5)
+        self.assertIsNone(data)
+        self.assertIn("HTTP 429", err)
+        self.assertIn("Too many", err)
+
+    def test_one_good_server_is_enough(self):
+        calls = []
+        def fake(url, data, timeout, headers):
+            calls.append(url)
+            if "private.coffee" in url:
+                class R:
+                    status_code = 200
+                    text = "{}"
+                    def json(self): return {"elements": [{"type": "node"}]}
+                return R()
+            raise geo.requests.exceptions.ConnectionError()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(geo, "CACHE_DIR", d), \
+             mock.patch.object(geo.requests, "post", side_effect=fake), \
+             mock.patch.object(geo.time, "sleep"):
+            out = geo._run("y")
+        self.assertEqual(out, [{"type": "node"}])
+        self.assertEqual(len(calls), 2)  # first server failed, second answered
 
     def test_no_network_raises(self):
         with mock.patch.dict(os.environ, {"GEO_PROVIDER": "off"}):
