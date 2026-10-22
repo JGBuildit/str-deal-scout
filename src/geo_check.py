@@ -39,6 +39,27 @@ def google_section(lines):
         except geo.GeoUnavailable as e:
             ok = False
             lines.append(f"  Google {name}: FAIL {e}")
+    # Raw (unfiltered) results with their Google place types, so the type
+    # whitelist can be built from evidence rather than guesses.
+    lines.append("  Raw beach results near Grayton Beach (30.3226,-86.1645), with types:")
+    try:
+        for q in ("beach access", "beach"):
+            raw = geo_google._post(geo_google.PLACES_TEXT,
+                {"textQuery": q, "pageSize": 10, "rankPreference": "DISTANCE",
+                 "locationBias": {"circle": {"center": {"latitude": 30.3226, "longitude": -86.1645},
+                                             "radius": 1500.0}}},
+                "places.displayName,places.types")
+            for p in raw.get("places", []):
+                lines.append(f"    [{q}] {(p.get('displayName') or {}).get('text', '')!r}: {','.join(p.get('types', []))}")
+        for q, lat, lng in (("lake", 44.9100, -116.0990), ("ski lift", 37.7000, -112.8450)):
+            raw = geo_google._post(geo_google.PLACES_TEXT,
+                {"textQuery": q, "pageSize": 6, "rankPreference": "DISTANCE",
+                 "locationBias": {"circle": {"center": {"latitude": lat, "longitude": lng}, "radius": 3000.0}}},
+                "places.displayName,places.types")
+            for p in raw.get("places", []):
+                lines.append(f"    [{q}] {(p.get('displayName') or {}).get('text', '')!r}: {','.join(p.get('types', []))}")
+    except geo.GeoUnavailable as e:
+        lines.append(f"    raw lookup FAILED: {e}")
     try:
         g = geo_google.get_geo(LAT, LNG, [{"signal": "beach", "max_m": 300},
                                           {"signal": "walkable", "min_pois": 8, "radius_m": 800}])
