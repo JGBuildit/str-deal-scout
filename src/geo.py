@@ -215,8 +215,20 @@ def evaluate_location(geo, rules):
 # ---------------------------------------------------------------------------
 # Overpass access
 # ---------------------------------------------------------------------------
+def _clip(lat, lng, radius):
+    """Bounding box (south,west,north,east) used to clip returned geometry.
+
+    Without clipping, Overpass sends the FULL outline of every matching
+    feature - for the Gulf coastline or a large bay that is huge and slow.
+    """
+    dlat = radius / _M_LAT
+    dlng = radius / (_M_LNG * math.cos(math.radians(lat)))
+    return f"{lat - dlat:.5f},{lng - dlng:.5f},{lat + dlat:.5f},{lng + dlng:.5f}"
+
+
 def _near_query(lat, lng, radius, poi_radius):
-    return f"""[out:json][timeout:45];
+    clip = _clip(lat, lng, max(radius, poi_radius))
+    return f"""[out:json][timeout:40];
 (
   way(around:{radius},{lat},{lng})[natural=beach];
   way(around:{radius},{lat},{lng})[natural=coastline];
@@ -228,16 +240,17 @@ def _near_query(lat, lng, radius, poi_radius):
   way(around:60,{lat},{lng})[highway];
   node(around:{poi_radius},{lat},{lng})[amenity~"^({AMENITY_POIS})$"];
 );
-out geom tags;"""
+out geom({clip}) tags;"""
 
 
 def _ski_query(lat, lng, radius):
-    return f"""[out:json][timeout:45];
+    clip = _clip(lat, lng, radius)
+    return f"""[out:json][timeout:40];
 (
   way(around:{radius},{lat},{lng})[aerialway~"^({LIFTS})$"];
   way(around:{radius},{lat},{lng})["piste:type"="downhill"];
 );
-out geom tags;"""
+out geom({clip}) tags;"""
 
 
 def _run(query):
@@ -247,18 +260,23 @@ def _run(query):
         with open(path, encoding="utf-8") as f:
             return json.load(f)
     last = None
-    for url in OVERPASS_URLS:
-        try:
-            r = requests.post(url, data={"data": query}, timeout=70,
-                              headers={"User-Agent": USER_AGENT})
-            r.raise_for_status()
-            data = r.json().get("elements", [])
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(data, f)
-            time.sleep(1.0)  # be polite to the free public service
-            return data
-        except Exception as e:  # noqa: BLE001
-            last = e
+    for attempt in range(2):
+        for url in OVERPASS_URLS:
+            try:
+                r = requests.post(url, data={"data": query}, timeout=50,
+                                  headers={"User-Agent": USER_AGENT})
+                if r.status_code in (429, 504):
+                    last = f"{url}: HTTP {r.status_code}"
+                    continue
+                r.raise_for_status()
+                data = r.json().get("elements", [])
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(data, f)
+                time.sleep(1.0)  # be polite to the free public service
+                return data
+            except Exception as e:  # noqa: BLE001
+                last = e
+        time.sleep(5 * (attempt + 1))
     raise GeoUnavailable(str(last))
 
 
