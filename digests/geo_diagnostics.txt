@@ -1,21 +1,5 @@
-Map service check 2026-10-22T18:55:29+00:00Z
-User-Agent comparison on overpass-api.de (tiny query):
-  old UA: overpass-api.de HTTP 406 in 1s <html> <head><title>406 Not Acceptable</title></head> <body>
-  new UA: overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body>
-  overpass-api.de                  tiny     FAIL  overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body>
-  overpass-api.de                  water    FAIL  overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body>
-  overpass-api.de                  roads    FAIL  overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body>
-  overpass-api.de                  eateries FAIL  overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body>
-  overpass.private.coffee          tiny     FAIL  overpass.private.coffee timeout after 31s
-  overpass.private.coffee          water    FAIL  overpass.private.coffee timeout after 30s
-  overpass.private.coffee          roads    FAIL  overpass.private.coffee timeout after 30s
-  overpass.private.coffee          eateries FAIL  overpass.private.coffee timeout after 30s
-  overpass.kumi.systems            tiny     FAIL  overpass.kumi.systems timeout after 31s
-  overpass.kumi.systems            water    FAIL  overpass.kumi.systems timeout after 30s
-  overpass.kumi.systems            roads    FAIL  overpass.kumi.systems timeout after 30s
-  overpass.kumi.systems            eateries FAIL  overpass.kumi.systems timeout after 30s
-  lz4.overpass-api.de              tiny     FAIL  lz4.overpass-api.de ConnectionError
-  lz4.overpass-api.de              water    FAIL  lz4.overpass-api.de ConnectionError
-  lz4.overpass-api.de              roads    FAIL  lz4.overpass-api.de ConnectionError
-  lz4.overpass-api.de              eateries FAIL  lz4.overpass-api.de ConnectionError
-END-TO-END FAILED: overpass-api.de ConnectionError | overpass.private.coffee timeout after 30s | overpass.kumi.systems timeout after 30s | lz4.overpass-api.de ConnectionError
+Map service check 2026-10-22T19:57:07+00:00Z
+  Google Places text search (beach): ok (8 places, nearest 'Inlet Beach Regional Access' 1342 m)
+  Google Places nearby (eateries): ok (13)
+  Google Routes walking: ok (334)
+  Google END-TO-END: beach None m '', eateries 13

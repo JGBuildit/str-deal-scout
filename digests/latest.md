@@ -1,6 +1,6 @@
 # STR Acquisition Screen - 2026-10-22
 
-Scanned 15 markets, 4787 listings scored. **0 PASS** (AirDNA-backed), **0 PROVISIONAL** (revenue still an estimate), 2 need a map check, 4785 failed a gate.
+Scanned 15 markets, 4787 listings scored. **1 PASS** (AirDNA-backed), **0 PROVISIONAL** (revenue still an estimate), 0 need a map check, 4786 failed a gate.
 
 _Gates: cash flow after debt service, modeled year-1 deduction near target, and a feature verified on the map (beach / lake / canal / ski / walkable). PASS needs revenue from your AirDNA files in `data/airdna/`. Rates, taxes, insurance and the deduction model are estimates - verify before an offer._
 
@@ -8,13 +8,11 @@ _Gates: cash flow after debt service, modeled year-1 deduction near target, and 
 
 | Score | Status | Property | Market | Price | Bd/Ba | Amenities | Location (map) | Gross | Cash flow | CoC | Yr-1 deduction |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 42 | NEEDS_MAP | 8 Gulf Mark Ln, Santa Rosa Beach, FL 32459 | 30A (Dune Allen to Inlet Beach), FL | $1,199,000 | 5/4 | - | - | $167,000 | $820 | 0.2% | $236,276 |
-| 40 | NEEDS_MAP | 28A Meigs Dr, Shalimar, FL 32579 | Destin / Fort Walton / Okaloosa Island, FL | $899,600 | 6/4 | - | - | $124,246 | $380 | 0.1% | $225,306 |
+| 52 | PASS | 8 Gulf Mark Ln, Santa Rosa Beach, FL 32459 | 30A (Dune Allen to Inlet Beach), FL | $1,199,000 | 5/4 | - | walkable (9 eateries/bars within 800 m) | $167,000 | $820 | 0.2% | $236,276 |
 
 ### Flags to verify on the shortlist
 
-- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - Location UNVERIFIED - map lookup unavailable (overpass-api.de ConnectionError | overpass.private.coffee timeout after 30s | overpass.kumi.systems timeout after 30s | lz4.overpass-api.de ConnectionError). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
-- **28A Meigs Dr, Shalimar, FL 32579** - Location UNVERIFIED - map lookup unavailable (overpass-api.de ConnectionError | overpass.private.coffee timeout after 30s | overpass.kumi.systems timeout after 30s | lz4.overpass-api.de ConnectionError). STR rules: Confirm city/county registration; many condo associations restrict rentals.
+- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - walk is by Google route; whether it crosses a busy road is NOT checked - view on a map. STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
 
 ## Did not qualify (closest first)
 
@@ -61,7 +59,7 @@ _Gates: cash flow after debt service, modeled year-1 deduction near target, and 
 | 54 | 4625 Pine Blvd, Orange Beach, AL 36561 | Gulf Shores / Orange Beach, AL | $512,500 | $14,801 | $149,047 | year-1 deduction $149,047 below $225,000 |
 | 54 | 4281 Birkdale St, Gulf Shores, AL 36542 | Gulf Shores / Orange Beach, AL | $399,000 | $13,239 | $120,326 | year-1 deduction $120,326 below $225,000 |
 
-_...and 4745 more (see the dashboard)._
+_...and 4746 more (see the dashboard)._
 
 
 ---
