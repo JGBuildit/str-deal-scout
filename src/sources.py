@@ -56,25 +56,35 @@ def _normalize(raw: dict) -> dict:
         "days_on_market": _days_on_market(raw),
         "lat": raw.get("latitude"),
         "lng": raw.get("longitude"),
+        # Optional extras (used by the acquisition profile). RentCast does not
+        # always return these - check a live response and adjust the keys.
+        "hoa_fee": (raw.get("hoa") or {}).get("fee") if isinstance(raw.get("hoa"), dict) else None,
+        "features": raw.get("features") if isinstance(raw.get("features"), dict) else {},
     }
 
 
-def fetch_rentcast(market: dict, api_key: str) -> list:
-    """Query RentCast for active sale listings around a lake's coordinates."""
-    params = {
-        "latitude": market["lat"],
-        "longitude": market["lng"],
-        "radius": market["radius_miles"],
-        "status": "Active",
-        "limit": 50,
-    }
+def fetch_rentcast(market: dict, api_key: str, limit: int = 50, max_pages: int = 1) -> list:
+    """Query RentCast for active sale listings around a market's coordinates."""
     headers = {"X-Api-Key": api_key, "Accept": "application/json"}
-    resp = requests.get(f"{RENTCAST_BASE}/listings/sale",
-                        params=params, headers=headers, timeout=30)
-    resp.raise_for_status()
-    data = resp.json()
-    records = data if isinstance(data, list) else data.get("listings", data.get("data", []))
-    return [_normalize(r) for r in records]
+    out = []
+    for page in range(max_pages):
+        params = {
+            "latitude": market["lat"],
+            "longitude": market["lng"],
+            "radius": market["radius_miles"],
+            "status": "Active",
+            "limit": limit,
+            "offset": page * limit,
+        }
+        resp = requests.get(f"{RENTCAST_BASE}/listings/sale",
+                            params=params, headers=headers, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        records = data if isinstance(data, list) else data.get("listings", data.get("data", []))
+        out.extend(_normalize(r) for r in records)
+        if len(records) < limit:
+            break
+    return out
 
 
 def fetch_listings(market: dict) -> tuple:
@@ -86,7 +96,11 @@ def fetch_listings(market: dict) -> tuple:
     api_key = os.environ.get("RENTCAST_API_KEY", "").strip()
     if api_key:
         try:
-            listings = fetch_rentcast(market, api_key)
+            if market.get("profile") == "acq":
+                # Big coastal circles return many listings: page through them.
+                listings = fetch_rentcast(market, api_key, limit=500, max_pages=4)
+            else:
+                listings = fetch_rentcast(market, api_key)
             return listings, "live"
         except Exception as e:  # noqa: BLE001 - we want to degrade gracefully
             print(f"  [warn] RentCast failed for {market['label']}: {e}. Using demo data.")
@@ -129,5 +143,26 @@ SAMPLE_LISTINGS = {
          "price": 250000, "bedrooms": 2, "bathrooms": 2, "sqft": 1227,
          "property_type": "Condo", "url": "", "days_on_market": 21,
          "description": "Slopeside ski-in/ski-out condo at Peek'n Peak. Association/HOA applies."},
+    ],
+
+    # ---- Acquisition-profile demo data (ILLUSTRATIVE - not real listings) ----
+    "scenic_30a": [
+        {"address": "100 Demo Dune Dr, Santa Rosa Beach, FL", "city": "Santa Rosa Beach", "state": "FL",
+         "price": 1_450_000, "bedrooms": 5, "bathrooms": 4, "sqft": 3100,
+         "property_type": "Single Family", "url": "", "days_on_market": 40,
+         "lat": 30.3195, "lng": -86.1250, "hoa_fee": None, "features": {},
+         "description": "Beach-area home with private heated pool and outdoor kitchen."},
+        {"address": "200 Demo Scrub Rd, Santa Rosa Beach, FL", "city": "Santa Rosa Beach", "state": "FL",
+         "price": 640_000, "bedrooms": 3, "bathrooms": 2, "sqft": 1600,
+         "property_type": "Single Family", "url": "", "days_on_market": 15,
+         "lat": 30.3800, "lng": -86.2000, "hoa_fee": None, "features": {},
+         "description": "Cozy home, inland, community pool access."},
+    ],
+    "brian_head_ut": [
+        {"address": "300 Demo Ski Run, Brian Head, UT", "city": "Brian Head", "state": "UT",
+         "price": 925_000, "bedrooms": 5, "bathrooms": 4, "sqft": 3000,
+         "property_type": "Single Family", "url": "", "days_on_market": 25,
+         "lat": 37.7020, "lng": -112.8400, "hoa_fee": None, "features": {},
+         "description": "Ski-area chalet with private hot tub and sauna."},
     ],
 }
