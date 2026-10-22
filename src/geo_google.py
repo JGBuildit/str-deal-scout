@@ -35,11 +35,12 @@ ROUTES_URL = "https://routes.googleapis.com/directions/v2:computeRoutes"
 TIMEOUT = 20
 MAX_WALK_CANDIDATES = 3
 
-# signal -> Text Search query used to find the nearest one
+# signal -> Text Search queries used to find the nearest one. Several phrasings
+# because public beach access points are rarely named just "beach".
 QUERIES = {
-    "beach": "beach",
-    "lake": "lake",
-    "ski": "ski lift",
+    "beach": ["beach access", "beach"],
+    "lake": ["lake"],
+    "ski": ["ski lift", "ski resort"],
 }
 
 
@@ -98,11 +99,21 @@ def haversine_m(lat1, lng1, lat2, lng2):
 
 
 def find_places(query, lat, lng, radius_m):
-    """Places matching `query` near the point, as [{name, lat, lng, straight_m}]."""
-    body = {"textQuery": query, "pageSize": 8,
+    """Places matching `query` near the point, nearest first, as
+    [{name, lat, lng, types, straight_m}]. Asks Google to rank by DISTANCE (the
+    default ranks by relevance, which can bury a closer beach access); if the
+    API rejects that option it retries with the default."""
+    body = {"textQuery": query, "pageSize": 10, "rankPreference": "DISTANCE",
             "locationBias": {"circle": {"center": {"latitude": lat, "longitude": lng},
                                         "radius": float(min(radius_m, 50000))}}}
-    data = _post(PLACES_TEXT, body, "places.displayName,places.location,places.types")
+    mask = "places.displayName,places.location,places.types"
+    try:
+        data = _post(PLACES_TEXT, body, mask)
+    except _geo_error() as e:
+        if "rankPreference" not in str(e) and "HTTP 400" not in str(e):
+            raise
+        body.pop("rankPreference")
+        data = _post(PLACES_TEXT, body, mask)
     out = []
     for p in data.get("places", []):
         loc = p.get("location") or {}
@@ -144,7 +155,7 @@ def get_geo(lat, lng, rules):
     out = {"beach_m": None, "lake_m": None, "canal_m": None, "ski_m": None, "coast_m": None,
            "pois_walkable": 0, "crosses_busy": {}, "crosses_moderate": {},
            "nearest_road_class": None, "fronts_busy_road": False,
-           "names": {}, "source": "google",
+           "names": {}, "nearest": {}, "source": "google",
            "crossing_checked": False}
 
     for rule in rules:
@@ -152,12 +163,18 @@ def get_geo(lat, lng, rules):
         if sig == "walkable":
             out["pois_walkable"] = count_eateries(lat, lng, rule.get("radius_m", 800))
             continue
-        q = QUERIES.get(sig)
-        if not q or out.get(f"{sig}_m") is not None:
+        queries = QUERIES.get(sig)
+        if not queries or out.get(f"{sig}_m") is not None:
             continue
         reach = rule["max_m"]
         # Look wider than the rule so a near miss is reported rather than invisible.
-        places = find_places(q, lat, lng, max(reach * 4, 1500))
+        found = {}
+        for q in queries:
+            for p in find_places(q, lat, lng, max(reach * 4, 1500)):
+                found[(round(p["lat"], 5), round(p["lng"], 5))] = p
+        places = sorted(found.values(), key=lambda x: x["straight_m"])
+        if places:
+            out["nearest"][sig] = (places[0]["name"], int(places[0]["straight_m"]))
         best = None
         for p in places[:MAX_WALK_CANDIDATES]:
             if p["straight_m"] > reach * 2.5:

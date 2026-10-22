@@ -66,6 +66,37 @@ class GoogleTests(unittest.TestCase):
         self.assertTrue(any("Dune Allen Beach" in m for m in ev["matched"]))
         self.assertTrue(any("NOT checked" in n for n in ev["notes"]))
 
+    def test_search_asks_for_distance_ranking(self):
+        bodies = []
+        def fake(url, json=None, timeout=None, headers=None):
+            bodies.append((url, json))
+            return Resp(200, {"places": []})
+        with mock.patch.object(geo_google.requests, "post", side_effect=fake):
+            geo_google.find_places("beach access", LAT, LNG, 1500)
+        self.assertEqual(bodies[0][1].get("rankPreference"), "DISTANCE")
+
+    def test_retries_without_rank_preference_if_rejected(self):
+        seen = []
+        def fake(url, json=None, timeout=None, headers=None):
+            seen.append("rankPreference" in json)
+            if "rankPreference" in json:
+                return Resp(400, {"error": {"message": "Invalid value at rankPreference"}})
+            return Resp(200, {"places": [place("X", -0.001, 0)]})
+        with mock.patch.object(geo_google.requests, "post", side_effect=fake):
+            res = geo_google.find_places("beach", LAT, LNG, 1500)
+        self.assertEqual(seen, [True, False])
+        self.assertEqual(len(res), 1)
+
+    def test_nearest_is_reported_even_when_out_of_reach(self):
+        far = place("Inlet Beach Regional Access", -0.012, 0)  # ~1.3 km
+        rules = [{"signal": "beach", "max_m": 300}]
+        with mock.patch.object(geo_google.requests, "post", side_effect=router([far], 1700, 0)):
+            g = geo_google.get_geo(LAT, LNG, rules)
+        self.assertIsNone(g["beach_m"])
+        name, d = g["nearest"]["beach"]
+        self.assertEqual(name, "Inlet Beach Regional Access")
+        self.assertGreater(d, 1000)
+
     def test_far_beach_does_not_match(self):
         far = place("Far Beach", -0.02, 0)  # ~2.2 km
         with mock.patch.object(geo_google.requests, "post", side_effect=router([far], 2900, 0)):

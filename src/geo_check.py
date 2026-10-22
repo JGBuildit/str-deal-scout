@@ -26,14 +26,14 @@ def google_section(lines):
         return False
     ok = True
     steps = [
-        ("Places text search (beach)", lambda: geo_google.find_places("beach", LAT, LNG, 1500)),
+        ("Places text search (beach access)", lambda: geo_google.find_places("beach access", LAT, LNG, 1500)),
         ("Places nearby (eateries)", lambda: geo_google.count_eateries(LAT, LNG, 800)),
         ("Routes walking", lambda: geo_google.walking_m(LAT, LNG, LAT - 0.002, LNG)),
     ]
     for name, fn in steps:
         try:
             res = fn()
-            detail = (f"{len(res)} places, nearest {res[0]['name']!r} {res[0]['straight_m']:.0f} m"
+            detail = ("; ".join(f"{r['name']!r} {r['straight_m']:.0f} m" for r in res[:3])
                       if isinstance(res, list) and res else res)
             lines.append(f"  Google {name}: ok ({detail})")
         except geo.GeoUnavailable as e:
