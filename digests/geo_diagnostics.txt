@@ -1,4 +1,4 @@
-Map service check 2026-10-22T20:01:07+00:00Z
+Map service check 2026-10-22T20:02:26+00:00Z
   Google Places text search (beach access): ok ('Wall Street Public Beach Access' 941 m; 'Inlet Beach Regional Access' 1342 m; 'Phillips Inlet Beach Access' 1755 m)
   Google Places nearby (eateries): ok (13)
   Google Routes walking: ok (334)
@@ -13,16 +13,16 @@ Map service check 2026-10-22T20:01:07+00:00Z
     [beach access] '2 The Sea - Private Beach Access': lodging,point_of_interest,establishment
     [beach access] 'New to 30A! Freshly Renovated, Walk to Seaside, Pool, Easy Beach Access': lodging,point_of_interest,establishment
     [beach access] 'Gulf Front, 2 BR/ 2 BA Private Beach Access Pool & Bikes': lodging,point_of_interest,establishment
-    [beach] 'SALTY Beach Setups': service,point_of_interest,establishment
+    [beach] 'Grayton Beach Catering and Events': catering_service,food_delivery,shipping_service,point_of_interest,food,service,establishment
+    [beach] 'Grayton Beach Fitness': gym,fitness_center,sports_activity_location,association_or_organization,point_of_interest,health,service,establishment
+    [beach] 'SALTY Beach Setups': point_of_interest,service,establishment
+    [beach] 'Grayton Beach State Park Cabins (Resgistered Guests Only)': lodging,point_of_interest,establishment
     [beach] 'Seaside': park,point_of_interest,establishment
     [beach] 'Blue Lake Road Beach Access': park,point_of_interest,establishment
     [beach] 'Blue Mountain Beach': beach,natural_feature,establishment
     [beach] 'Gulf Point Road Beach Access': park,point_of_interest,establishment
     [beach] 'Blue Mountain Beach': beach,natural_feature,establishment
     [beach] 'Blue Mountain Regional Beach Access': park,point_of_interest,establishment
-    [beach] 'Blue Mountain Beach': park,point_of_interest,establishment
-    [beach] '30A Santa Rosa Beach Florida': lodging,point_of_interest,establishment
-    [beach] 'Ed Walline Regional Beach Access': park,point_of_interest,establishment
     [lake] 'McCall Lake Cruises': tourist_attraction,point_of_interest,establishment
     [lake] 'Our Lady of the Lake': church,place_of_worship,point_of_interest,association_or_organization,establishment
     [lake] 'Mccall Vacation Rental ~ 1/2 Mi to Payette Lake!': lodging,point_of_interest,establishment

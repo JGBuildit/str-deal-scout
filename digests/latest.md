@@ -12,7 +12,7 @@ _Gates: cash flow after debt service, modeled year-1 deduction near target, and 
 
 ### Flags to verify on the shortlist
 
-- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - walk is by Google route; whether it crosses a busy road is NOT checked - view on a map; nearest beach found: Grayton Beach Massage (~266 m straight-line). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
+- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - walk is by Google route; whether it crosses a busy road is NOT checked - view on a map; nearest beach found: Grayton Dunes Beach Access (~1653 m straight-line). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
 
 ## Did not qualify (closest first)
 
