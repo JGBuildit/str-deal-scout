@@ -110,11 +110,30 @@ class GoogleTests(unittest.TestCase):
             res = geo_google.find_places("beach", LAT, LNG, 1500)
         self.assertEqual([r["name"] for r in res], ["Wall Street Public Beach Access"])
 
-    def test_real_features_pass_the_filter(self):
-        for n in ("Grayton Beach State Park", "Inlet Beach Regional Access", "Payette Lake",
-                  "Brian Head Resort", "Seaside Beach Access 4", "Pine Mountain Ski Lift"):
-            self.assertTrue(geo_google.is_real_feature(n, ["ski_resort"]), n)
-        self.assertFalse(geo_google.is_real_feature("Brian Head Resort", ["lodging", "resort_hotel"]))
+    def test_type_whitelist_from_real_google_results(self):
+        est = ["point_of_interest", "establishment"]
+        cases = [
+            # (signal, name, types, expected)
+            ("beach", "Grayton Dunes Beach Access", ["park"] + est, True),
+            ("beach", "Bramble Grove Beach Access", est, True),
+            ("beach", "Blue Mountain Beach", ["beach", "natural_feature", "establishment"], True),
+            ("beach", "2 The Sea - Private Beach Access", ["lodging"] + est, False),
+            ("beach", "Gulf Front, 2 BR/ 2 BA Private Beach Access Pool & Bikes", ["lodging"] + est, False),
+            ("beach", "SALTY Beach Setups", ["service"] + est, False),
+            ("beach", "Grayton Beach Massage", ["spa"] + est, False),
+            ("beach", "30A Santa Rosa Beach Florida", ["lodging"] + est, False),
+            ("lake", "Payette Lake", ["lake", "natural_feature", "establishment"], True),
+            ("lake", "Rotary Park", ["park", "tourist_attraction"] + est, False),
+            ("lake", "McCall Lake Cruises", ["tourist_attraction"] + est, False),
+            ("lake", "Our Lady of the Lake", ["church", "place_of_worship"] + est, False),
+            ("lake", "Mccall Vacation Rental ~ 1/2 Mi to Payette Lake!", ["lodging"] + est, False),
+            ("ski", "Brian Head Resort", ["ski_resort", "hiking_area", "resort_hotel", "hotel", "lodging"] + est, True),
+            ("ski", "Navajo Ski lodge", ["ski_resort"] + est, True),
+            ("ski", "Navajo Express Chair Lift", ["tourist_attraction"] + est, True),
+            ("ski", "Ski-Out Brian Head Condo - Top of Navajo Lift", ["lodging"] + est, False),
+        ]
+        for sig, name, types, want in cases:
+            self.assertEqual(geo_google.is_real_feature(name, types, sig), want, f"{sig}: {name}")
 
     def test_far_beach_does_not_match(self):
         far = place("Far Beach", -0.02, 0)  # ~2.2 km

@@ -59,11 +59,36 @@ LISTING_NAME = re.compile(
     re.IGNORECASE)
 
 
-def is_real_feature(name, types):
-    """False for rentals / businesses that only mention the feature in their name."""
-    if set(types or []) & EXCLUDED_TYPES:
+BAD_TYPES = EXCLUDED_TYPES | {"service", "church", "place_of_worship",
+                              "association_or_organization", "health", "beauty_salon"}
+ACCESS_NAME = re.compile(r"beach (access|walkover|entrance)|public (beach|access)", re.IGNORECASE)
+LIFT_NAME = re.compile(r"\b(lift|gondola|chair ?lift|tram)\b", re.IGNORECASE)
+
+
+def is_real_feature(name, types, signal=None):
+    """Is this Google place the actual feature, not a business that mentions it?
+
+    Built from the types Google really returns (see digests/geo_diagnostics.txt):
+    public beach accesses are typed `park`; beaches `beach`/`natural_feature`;
+    lakes `lake`; ski areas `ski_resort`; chair lifts only `tourist_attraction`.
+    Rentals, hotels, spas and tour companies carry lodging/service/etc. types.
+    """
+    t = set(types or [])
+    if LISTING_NAME.search(name or ""):
         return False
-    return not LISTING_NAME.search(name or "")
+    if signal == "beach":
+        if "lodging" in t:
+            return False
+        if t & {"beach", "natural_feature", "park"}:
+            return True
+        return bool(ACCESS_NAME.search(name or "")) and not (t & BAD_TYPES)
+    if signal == "lake":
+        return bool(t & {"lake", "natural_feature"}) and "lodging" not in t
+    if signal == "ski":
+        if "ski_resort" in t:
+            return True
+        return bool(LIFT_NAME.search(name or "")) and "lodging" not in t
+    return not (t & BAD_TYPES)
 
 
 def _geo_error():
@@ -120,7 +145,7 @@ def haversine_m(lat1, lng1, lat2, lng2):
     return 2 * 6371000 * math.asin(math.sqrt(a))
 
 
-def find_places(query, lat, lng, radius_m):
+def find_places(query, lat, lng, radius_m, signal=None):
     """Places matching `query` near the point, nearest first, as
     [{name, lat, lng, types, straight_m}]. Asks Google to rank by DISTANCE (the
     default ranks by relevance, which can bury a closer beach access); if the
@@ -142,7 +167,7 @@ def find_places(query, lat, lng, radius_m):
         if "latitude" not in loc:
             continue
         name = (p.get("displayName") or {}).get("text", "")
-        if not is_real_feature(name, p.get("types", [])):
+        if not is_real_feature(name, p.get("types", []), signal):
             continue
         out.append({"name": name,
                     "lat": loc["latitude"], "lng": loc["longitude"],
@@ -195,7 +220,7 @@ def get_geo(lat, lng, rules):
         # Look wider than the rule so a near miss is reported rather than invisible.
         found = {}
         for q in queries:
-            for p in find_places(q, lat, lng, max(reach * 4, 1500)):
+            for p in find_places(q, lat, lng, max(reach * 4, 1500), signal=sig):
                 found[(round(p["lat"], 5), round(p["lng"], 5))] = p
         places = sorted(found.values(), key=lambda x: x["straight_m"])
         if places:
