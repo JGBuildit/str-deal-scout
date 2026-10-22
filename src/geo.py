@@ -207,11 +207,14 @@ def evaluate_location(geo, rules):
         label = {"beach": "beach", "lake": "lake", "canal": "canal frontage",
                  "ski": "ski lift/run"}[sig]
         tier = "adjacent" if d <= 60 else ("~1 block" if d <= 200 else "short walk")
-        matched.append(f"{label} {d} m ({tier})")
+        name = (geo.get("names") or {}).get(sig)
+        matched.append(f"{label} {d} m ({tier})" + (f" [{name}]" if name else ""))
         if geo["crosses_moderate"].get(sig):
             notes.append(f"walk to {label} crosses a secondary road")
     if geo.get("fronts_busy_road"):
         notes.append("property fronts a busy road (noise/safety)")
+    if geo.get("source") == "google" and matched:
+        notes.append("walk is by Google route; whether it crosses a busy road is NOT checked - view on a map")
     return {"ok": bool(matched), "matched": matched, "notes": notes}
 
 
