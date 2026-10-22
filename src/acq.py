@@ -237,6 +237,9 @@ def score_acq(listing, market, airdna_data, use_geo=True):
         flags.append("Location not checked (demo mode)")
     for n in location["notes"]:
         flags.append(n)
+    if geo and geo.get("nearest"):
+        for sig, (nm, d) in geo["nearest"].items():
+            flags.append(f"nearest {sig} found: {nm} (~{d} m straight-line)")
 
     if fails:
         status = "FAIL"

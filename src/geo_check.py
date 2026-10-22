@@ -26,19 +26,40 @@ def google_section(lines):
         return False
     ok = True
     steps = [
-        ("Places text search (beach)", lambda: geo_google.find_places("beach", LAT, LNG, 1500)),
+        ("Places text search (beach access)", lambda: geo_google.find_places("beach access", LAT, LNG, 1500)),
         ("Places nearby (eateries)", lambda: geo_google.count_eateries(LAT, LNG, 800)),
         ("Routes walking", lambda: geo_google.walking_m(LAT, LNG, LAT - 0.002, LNG)),
     ]
     for name, fn in steps:
         try:
             res = fn()
-            detail = (f"{len(res)} places, nearest {res[0]['name']!r} {res[0]['straight_m']:.0f} m"
+            detail = ("; ".join(f"{r['name']!r} {r['straight_m']:.0f} m" for r in res[:3])
                       if isinstance(res, list) and res else res)
             lines.append(f"  Google {name}: ok ({detail})")
         except geo.GeoUnavailable as e:
             ok = False
             lines.append(f"  Google {name}: FAIL {e}")
+    # Raw (unfiltered) results with their Google place types, so the type
+    # whitelist can be built from evidence rather than guesses.
+    lines.append("  Raw beach results near Grayton Beach (30.3226,-86.1645), with types:")
+    try:
+        for q in ("beach access", "beach"):
+            raw = geo_google._post(geo_google.PLACES_TEXT,
+                {"textQuery": q, "pageSize": 10, "rankPreference": "DISTANCE",
+                 "locationBias": {"circle": {"center": {"latitude": 30.3226, "longitude": -86.1645},
+                                             "radius": 1500.0}}},
+                "places.displayName,places.types")
+            for p in raw.get("places", []):
+                lines.append(f"    [{q}] {(p.get('displayName') or {}).get('text', '')!r}: {','.join(p.get('types', []))}")
+        for q, lat, lng in (("lake", 44.9100, -116.0990), ("ski lift", 37.7000, -112.8450)):
+            raw = geo_google._post(geo_google.PLACES_TEXT,
+                {"textQuery": q, "pageSize": 6, "rankPreference": "DISTANCE",
+                 "locationBias": {"circle": {"center": {"latitude": lat, "longitude": lng}, "radius": 3000.0}}},
+                "places.displayName,places.types")
+            for p in raw.get("places", []):
+                lines.append(f"    [{q}] {(p.get('displayName') or {}).get('text', '')!r}: {','.join(p.get('types', []))}")
+    except geo.GeoUnavailable as e:
+        lines.append(f"    raw lookup FAILED: {e}")
     try:
         g = geo_google.get_geo(LAT, LNG, [{"signal": "beach", "max_m": 300},
                                           {"signal": "walkable", "min_pois": 8, "radius_m": 800}])

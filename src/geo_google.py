@@ -26,6 +26,7 @@ gates reach this module (a handful per week). Each costs roughly 3-8 requests.
 
 import math
 import os
+import re
 
 import requests
 
@@ -35,12 +36,59 @@ ROUTES_URL = "https://routes.googleapis.com/directions/v2:computeRoutes"
 TIMEOUT = 20
 MAX_WALK_CANDIDATES = 3
 
-# signal -> Text Search query used to find the nearest one
+# signal -> Text Search queries used to find the nearest one. Several phrasings
+# because public beach access points are rarely named just "beach".
 QUERIES = {
-    "beach": "beach",
-    "lake": "lake",
-    "ski": "ski lift",
+    "beach": ["beach access", "beach"],
+    "lake": ["lake"],
+    "ski": ["ski lift", "ski resort"],
 }
+
+
+# Text search for "beach" also returns vacation rentals, hotels and restaurants
+# that merely have the word in their name. Drop those: by Google's place type,
+# and by listing-style words in the name.
+EXCLUDED_TYPES = {
+    "lodging", "hotel", "resort_hotel", "motel", "bed_and_breakfast", "rv_park",
+    "campground", "real_estate_agency", "real_estate", "restaurant", "bar", "cafe",
+    "food", "store", "travel_agency", "shopping_mall", "spa", "gym",
+}
+LISTING_NAME = re.compile(
+    r"\b(\d+\s?-?\s?(bed|br|bath)|bedroom|bed\b|new construction|rental|vacation|condo|"
+    r"villas?|house|home|cottage|townhome|townhouse|for sale|airbnb|vrbo|inn|suites?)\b",
+    re.IGNORECASE)
+
+
+BAD_TYPES = EXCLUDED_TYPES | {"service", "church", "place_of_worship",
+                              "association_or_organization", "health", "beauty_salon"}
+ACCESS_NAME = re.compile(r"beach (access|walkover|entrance)|public (beach|access)", re.IGNORECASE)
+LIFT_NAME = re.compile(r"\b(lift|gondola|chair ?lift|tram)\b", re.IGNORECASE)
+
+
+def is_real_feature(name, types, signal=None):
+    """Is this Google place the actual feature, not a business that mentions it?
+
+    Built from the types Google really returns (see digests/geo_diagnostics.txt):
+    public beach accesses are typed `park`; beaches `beach`/`natural_feature`;
+    lakes `lake`; ski areas `ski_resort`; chair lifts only `tourist_attraction`.
+    Rentals, hotels, spas and tour companies carry lodging/service/etc. types.
+    """
+    t = set(types or [])
+    if LISTING_NAME.search(name or ""):
+        return False
+    if signal == "beach":
+        if "lodging" in t:
+            return False
+        if t & {"beach", "natural_feature", "park"}:
+            return True
+        return bool(ACCESS_NAME.search(name or "")) and not (t & BAD_TYPES)
+    if signal == "lake":
+        return bool(t & {"lake", "natural_feature"}) and "lodging" not in t
+    if signal == "ski":
+        if "ski_resort" in t:
+            return True
+        return bool(LIFT_NAME.search(name or "")) and "lodging" not in t
+    return not (t & BAD_TYPES)
 
 
 def _geo_error():
@@ -97,18 +145,31 @@ def haversine_m(lat1, lng1, lat2, lng2):
     return 2 * 6371000 * math.asin(math.sqrt(a))
 
 
-def find_places(query, lat, lng, radius_m):
-    """Places matching `query` near the point, as [{name, lat, lng, straight_m}]."""
-    body = {"textQuery": query, "pageSize": 8,
+def find_places(query, lat, lng, radius_m, signal=None):
+    """Places matching `query` near the point, nearest first, as
+    [{name, lat, lng, types, straight_m}]. Asks Google to rank by DISTANCE (the
+    default ranks by relevance, which can bury a closer beach access); if the
+    API rejects that option it retries with the default."""
+    body = {"textQuery": query, "pageSize": 10, "rankPreference": "DISTANCE",
             "locationBias": {"circle": {"center": {"latitude": lat, "longitude": lng},
                                         "radius": float(min(radius_m, 50000))}}}
-    data = _post(PLACES_TEXT, body, "places.displayName,places.location,places.types")
+    mask = "places.displayName,places.location,places.types"
+    try:
+        data = _post(PLACES_TEXT, body, mask)
+    except _geo_error() as e:
+        if "rankPreference" not in str(e) and "HTTP 400" not in str(e):
+            raise
+        body.pop("rankPreference")
+        data = _post(PLACES_TEXT, body, mask)
     out = []
     for p in data.get("places", []):
         loc = p.get("location") or {}
         if "latitude" not in loc:
             continue
-        out.append({"name": (p.get("displayName") or {}).get("text", ""),
+        name = (p.get("displayName") or {}).get("text", "")
+        if not is_real_feature(name, p.get("types", []), signal):
+            continue
+        out.append({"name": name,
                     "lat": loc["latitude"], "lng": loc["longitude"],
                     "types": p.get("types", []),
                     "straight_m": haversine_m(lat, lng, loc["latitude"], loc["longitude"])})
@@ -144,7 +205,7 @@ def get_geo(lat, lng, rules):
     out = {"beach_m": None, "lake_m": None, "canal_m": None, "ski_m": None, "coast_m": None,
            "pois_walkable": 0, "crosses_busy": {}, "crosses_moderate": {},
            "nearest_road_class": None, "fronts_busy_road": False,
-           "names": {}, "source": "google",
+           "names": {}, "nearest": {}, "source": "google",
            "crossing_checked": False}
 
     for rule in rules:
@@ -152,12 +213,18 @@ def get_geo(lat, lng, rules):
         if sig == "walkable":
             out["pois_walkable"] = count_eateries(lat, lng, rule.get("radius_m", 800))
             continue
-        q = QUERIES.get(sig)
-        if not q or out.get(f"{sig}_m") is not None:
+        queries = QUERIES.get(sig)
+        if not queries or out.get(f"{sig}_m") is not None:
             continue
         reach = rule["max_m"]
         # Look wider than the rule so a near miss is reported rather than invisible.
-        places = find_places(q, lat, lng, max(reach * 4, 1500))
+        found = {}
+        for q in queries:
+            for p in find_places(q, lat, lng, max(reach * 4, 1500), signal=sig):
+                found[(round(p["lat"], 5), round(p["lng"], 5))] = p
+        places = sorted(found.values(), key=lambda x: x["straight_m"])
+        if places:
+            out["nearest"][sig] = (places[0]["name"], int(places[0]["straight_m"]))
         best = None
         for p in places[:MAX_WALK_CANDIDATES]:
             if p["straight_m"] > reach * 2.5:

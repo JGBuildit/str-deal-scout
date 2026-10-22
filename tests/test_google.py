@@ -19,9 +19,9 @@ class Resp:
         return self._p
 
 
-def place(name, dlat, dlng):
+def place(name, dlat, dlng, types=None):
     return {"displayName": {"text": name}, "location": {"latitude": LAT + dlat, "longitude": LNG + dlng},
-            "types": ["natural_feature"]}
+            "types": types or ["natural_feature"]}
 
 
 def router(places=None, walk_m=140, eateries=11, calls=None):
@@ -65,6 +65,75 @@ class GoogleTests(unittest.TestCase):
         self.assertTrue(ev["ok"])
         self.assertTrue(any("Dune Allen Beach" in m for m in ev["matched"]))
         self.assertTrue(any("NOT checked" in n for n in ev["notes"]))
+
+    def test_search_asks_for_distance_ranking(self):
+        bodies = []
+        def fake(url, json=None, timeout=None, headers=None):
+            bodies.append((url, json))
+            return Resp(200, {"places": []})
+        with mock.patch.object(geo_google.requests, "post", side_effect=fake):
+            geo_google.find_places("beach access", LAT, LNG, 1500)
+        self.assertEqual(bodies[0][1].get("rankPreference"), "DISTANCE")
+
+    def test_retries_without_rank_preference_if_rejected(self):
+        seen = []
+        def fake(url, json=None, timeout=None, headers=None):
+            seen.append("rankPreference" in json)
+            if "rankPreference" in json:
+                return Resp(400, {"error": {"message": "Invalid value at rankPreference"}})
+            return Resp(200, {"places": [place("X", -0.001, 0)]})
+        with mock.patch.object(geo_google.requests, "post", side_effect=fake):
+            res = geo_google.find_places("beach", LAT, LNG, 1500)
+        self.assertEqual(seen, [True, False])
+        self.assertEqual(len(res), 1)
+
+    def test_nearest_is_reported_even_when_out_of_reach(self):
+        far = place("Inlet Beach Regional Access", -0.012, 0)  # ~1.3 km
+        rules = [{"signal": "beach", "max_m": 300}]
+        with mock.patch.object(geo_google.requests, "post", side_effect=router([far], 1700, 0)):
+            g = geo_google.get_geo(LAT, LNG, rules)
+        self.assertIsNone(g["beach_m"])
+        name, d = g["nearest"]["beach"]
+        self.assertEqual(name, "Inlet Beach Regional Access")
+        self.assertGreater(d, 1000)
+
+    def test_rentals_and_businesses_are_not_beaches(self):
+        junk = [
+            place("30A Grayton Beach New Construction! - Only 1 mile to the beach - Four-Bedroom House", -0.001, 0),
+            place("Beachside Villas", -0.0011, 0),
+            place("Beach House Inn", -0.0012, 0, ["lodging"]),
+            place("The Beach Bar", -0.0013, 0, ["bar", "restaurant"]),
+            place("4BR Beach Cottage Rental", -0.0014, 0),
+        ]
+        good = place("Wall Street Public Beach Access", -0.002, 0)
+        with mock.patch.object(geo_google.requests, "post", return_value=Resp(200, {"places": junk + [good]})):
+            res = geo_google.find_places("beach", LAT, LNG, 1500)
+        self.assertEqual([r["name"] for r in res], ["Wall Street Public Beach Access"])
+
+    def test_type_whitelist_from_real_google_results(self):
+        est = ["point_of_interest", "establishment"]
+        cases = [
+            # (signal, name, types, expected)
+            ("beach", "Grayton Dunes Beach Access", ["park"] + est, True),
+            ("beach", "Bramble Grove Beach Access", est, True),
+            ("beach", "Blue Mountain Beach", ["beach", "natural_feature", "establishment"], True),
+            ("beach", "2 The Sea - Private Beach Access", ["lodging"] + est, False),
+            ("beach", "Gulf Front, 2 BR/ 2 BA Private Beach Access Pool & Bikes", ["lodging"] + est, False),
+            ("beach", "SALTY Beach Setups", ["service"] + est, False),
+            ("beach", "Grayton Beach Massage", ["spa"] + est, False),
+            ("beach", "30A Santa Rosa Beach Florida", ["lodging"] + est, False),
+            ("lake", "Payette Lake", ["lake", "natural_feature", "establishment"], True),
+            ("lake", "Rotary Park", ["park", "tourist_attraction"] + est, False),
+            ("lake", "McCall Lake Cruises", ["tourist_attraction"] + est, False),
+            ("lake", "Our Lady of the Lake", ["church", "place_of_worship"] + est, False),
+            ("lake", "Mccall Vacation Rental ~ 1/2 Mi to Payette Lake!", ["lodging"] + est, False),
+            ("ski", "Brian Head Resort", ["ski_resort", "hiking_area", "resort_hotel", "hotel", "lodging"] + est, True),
+            ("ski", "Navajo Ski lodge", ["ski_resort"] + est, True),
+            ("ski", "Navajo Express Chair Lift", ["tourist_attraction"] + est, True),
+            ("ski", "Ski-Out Brian Head Condo - Top of Navajo Lift", ["lodging"] + est, False),
+        ]
+        for sig, name, types, want in cases:
+            self.assertEqual(geo_google.is_real_feature(name, types, sig), want, f"{sig}: {name}")
 
     def test_far_beach_does_not_match(self):
         far = place("Far Beach", -0.02, 0)  # ~2.2 km

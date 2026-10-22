@@ -1,5 +1,38 @@
-Map service check 2026-10-22T19:57:07+00:00Z
-  Google Places text search (beach): ok (8 places, nearest 'Inlet Beach Regional Access' 1342 m)
+Map service check 2026-10-22T20:02:26+00:00Z
+  Google Places text search (beach access): ok ('Wall Street Public Beach Access' 941 m; 'Inlet Beach Regional Access' 1342 m; 'Phillips Inlet Beach Access' 1755 m)
   Google Places nearby (eateries): ok (13)
   Google Routes walking: ok (334)
+  Raw beach results near Grayton Beach (30.3226,-86.1645), with types:
+    [beach access] 'Grayton Dunes Beach Access': park,point_of_interest,establishment
+    [beach access] 'Blue Mountain Regional Beach Access': park,point_of_interest,establishment
+    [beach access] 'Andalusia Beach Access': park,point_of_interest,establishment
+    [beach access] 'San Juan Beach Access': park,point_of_interest,establishment
+    [beach access] 'Santa Clara Regional Beach Access': park,point_of_interest,establishment
+    [beach access] 'Bramble Grove Beach Access': point_of_interest,establishment
+    [beach access] 'Pelayo Beach Access': park,point_of_interest,establishment
+    [beach access] '2 The Sea - Private Beach Access': lodging,point_of_interest,establishment
+    [beach access] 'New to 30A! Freshly Renovated, Walk to Seaside, Pool, Easy Beach Access': lodging,point_of_interest,establishment
+    [beach access] 'Gulf Front, 2 BR/ 2 BA Private Beach Access Pool & Bikes': lodging,point_of_interest,establishment
+    [beach] 'Grayton Beach Catering and Events': catering_service,food_delivery,shipping_service,point_of_interest,food,service,establishment
+    [beach] 'Grayton Beach Fitness': gym,fitness_center,sports_activity_location,association_or_organization,point_of_interest,health,service,establishment
+    [beach] 'SALTY Beach Setups': point_of_interest,service,establishment
+    [beach] 'Grayton Beach State Park Cabins (Resgistered Guests Only)': lodging,point_of_interest,establishment
+    [beach] 'Seaside': park,point_of_interest,establishment
+    [beach] 'Blue Lake Road Beach Access': park,point_of_interest,establishment
+    [beach] 'Blue Mountain Beach': beach,natural_feature,establishment
+    [beach] 'Gulf Point Road Beach Access': park,point_of_interest,establishment
+    [beach] 'Blue Mountain Beach': beach,natural_feature,establishment
+    [beach] 'Blue Mountain Regional Beach Access': park,point_of_interest,establishment
+    [lake] 'McCall Lake Cruises': tourist_attraction,point_of_interest,establishment
+    [lake] 'Our Lady of the Lake': church,place_of_worship,point_of_interest,association_or_organization,establishment
+    [lake] 'Mccall Vacation Rental ~ 1/2 Mi to Payette Lake!': lodging,point_of_interest,establishment
+    [lake] 'Rotary Park': park,tourist_attraction,point_of_interest,establishment
+    [lake] 'Epic McCall Group Cabin |Near Brundage, Town, Lake': lodging,point_of_interest,establishment
+    [lake] 'Payette Lake': lake,natural_feature,establishment
+    [ski lift] 'Ski-Out Brian Head Condo - Top of Navajo Lift': lodging,point_of_interest,establishment
+    [ski lift] 'SKI-IN SKI-OUT Navajo Mountainside Family Escape only 500 feet down to the lift!': lodging,point_of_interest,establishment
+    [ski lift] 'Brian Head Cabin - 1 Mile from ALL SKI LIFTS! Cozy, Spacious lots of fun': lodging,point_of_interest,establishment
+    [ski lift] 'Brian Head Resort': ski_resort,hiking_area,resort_hotel,tourist_attraction,hotel,lodging,sports_activity_location,point_of_interest,service,establishment
+    [ski lift] 'Navajo Ski lodge': ski_resort,sports_activity_location,point_of_interest,establishment
+    [ski lift] 'Navajo Express Chair Lift': tourist_attraction,point_of_interest,establishment
   Google END-TO-END: beach None m '', eateries 13
