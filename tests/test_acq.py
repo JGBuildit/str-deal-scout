@@ -227,6 +227,29 @@ class AirdnaTests(unittest.TestCase):
         self.assertEqual(r["source"], "airdna-property")
         self.assertEqual(r["annual_revenue"], 142000)
 
+    def test_annual_revenue_column_is_read(self):
+        d = tempfile.mkdtemp()
+        with open(os.path.join(d, "market_stats.csv"), "w") as f:
+            f.write("market_key,bedrooms,annual_revenue,adr,occupancy,pool,hot_tub,source_date,notes\n"
+                    "scenic_30a,4,\"$108,900\",766.62,0.57,,,2026-10-22,x\n"
+                    "scenic_30a,5,167000,,,,,2026-10-22,revenue only\n")
+        data = airdna.load(d)
+        self.assertEqual(data["market"][0]["annual_revenue"], 108900)
+        self.assertEqual(data["market"][1]["annual_revenue"], 167000)  # no adr/occ needed
+
+    def test_old_format_without_annual_revenue_still_loads(self):
+        d = self._dir("scenic_30a,4,640,0.51,,,,x\n")
+        data = airdna.load(d)
+        self.assertIsNone(data["market"][0]["annual_revenue"])
+
+    def test_model_uses_airdna_annual_revenue_not_adr_x_occ(self):
+        row = {"market_key": "scenic_30a", "bedrooms": 4, "annual_revenue": 109000,
+               "adr": 767, "occ": 0.57, "pool": None, "hot_tub": None, "date": "2026-10-22"}
+        am = acq.detect_amenities(LISTING)
+        rev = acq.revenue_basis(LISTING, MARKET, am, {"market": [row], "property": {}})
+        self.assertEqual(rev["gross"], 109000)
+        self.assertLess(rev["gross"], 767 * 0.57 * 365 * 0.75)
+
     def test_missing_files_ok(self):
         data = airdna.load(tempfile.mkdtemp())
         self.assertEqual(data, {"market": [], "property": {}})
