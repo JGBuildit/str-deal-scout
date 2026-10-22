@@ -38,7 +38,8 @@ OVERPASS_URLS = [
     "https://lz4.overpass-api.de/api/interpreter",
 ]
 CACHE_DIR = os.environ.get("GEO_CACHE_DIR", ".geo_cache")
-USER_AGENT = "str-deal-scout/1.0 (personal property screening)"
+USER_AGENT = "str-deal-scout/1.0 (+https://github.com/JGBuildit/str-deal-scout; personal property screening)"
+OLD_USER_AGENT = "str-deal-scout/1.0 (personal property screening)"  # kept only for geo_check comparison
 
 BUSY = {"motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"}
 MODERATE = {"secondary", "secondary_link"}
@@ -272,12 +273,12 @@ def _host(url):
     return url.split("//", 1)[-1].split("/", 1)[0]
 
 
-def _post(url, query, timeout):
+def _post(url, query, timeout, user_agent=None):
     """One request to one server. Returns (elements, None) or (None, short_error)."""
     t0 = time.time()
     try:
         r = requests.post(url, data={"data": query}, timeout=timeout,
-                          headers={"User-Agent": USER_AGENT})
+                          headers={"User-Agent": user_agent or USER_AGENT})
         dt = time.time() - t0
         if r.status_code != 200:
             body = " ".join(r.text.split())[:60]
@@ -292,8 +293,21 @@ def _post(url, query, timeout):
         return None, f"{_host(url)} {type(e).__name__}"
 
 
+# Circuit breaker: a server that fails FAIL_LIMIT times in one run is skipped for
+# the rest of the run, so a dead service costs minutes, not hours. When every
+# server is skipped, lookups fail instantly with the recorded reasons.
+FAIL_LIMIT = 2
+_FAILS = {}
+_LAST_ERR = {}
+
+
+def reset_breaker():
+    _FAILS.clear()
+    _LAST_ERR.clear()
+
+
 def _run(query):
-    """Run a query against each server in turn (twice round); cache successes."""
+    """Run a query against each live server in turn; cache successes."""
     os.makedirs(CACHE_DIR, exist_ok=True)
     path = os.path.join(CACHE_DIR, hashlib.sha1(query.encode()).hexdigest() + ".json")
     if os.path.exists(path):
@@ -301,15 +315,25 @@ def _run(query):
             return json.load(f)
     errors = []
     for attempt in range(2):
-        for url in OVERPASS_URLS:
+        live = [u for u in OVERPASS_URLS if _FAILS.get(u, 0) < FAIL_LIMIT]
+        if not live:
+            break
+        for url in live:
             data, err = _post(url, query, timeout=30)
             if data is not None:
+                _FAILS[url] = 0
                 with open(path, "w", encoding="utf-8") as f:
                     json.dump(data, f)
                 time.sleep(1.0)  # be polite to the free public services
                 return data
+            _FAILS[url] = _FAILS.get(url, 0) + 1
+            _LAST_ERR[url] = err
             errors.append(err)
-        time.sleep(4 * (attempt + 1))
+        if attempt == 0 and all(_FAILS.get(u, 0) >= FAIL_LIMIT for u in OVERPASS_URLS):
+            break
+        time.sleep(3)
+    if not errors:  # every server already tripped earlier in this run
+        errors = [_LAST_ERR[u] for u in OVERPASS_URLS if u in _LAST_ERR]
     # De-duplicate while keeping order, and keep the message short for the digest.
     seen = []
     for e in errors:

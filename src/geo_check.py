@@ -26,6 +26,10 @@ def main():
              ("water", geo._water_query(LAT, LNG, 1000)),
              ("roads", geo._road_query(LAT, LNG, 1000)),
              ("eateries", geo._poi_query(LAT, LNG, 800))]
+    lines.append("User-Agent comparison on overpass-api.de (tiny query):")
+    for label, ua in (("old UA", geo.OLD_USER_AGENT), ("new UA", geo.USER_AGENT)):
+        d, e = geo._post(geo.OVERPASS_URLS[0], tiny, timeout=30, user_agent=ua)
+        lines.append(f"  {label}: " + (e if e else f"ok ({len(d)} elements)"))
     for url in geo.OVERPASS_URLS:
         for name, q in tests:
             t0 = time.time()
@@ -36,7 +40,7 @@ def main():
             else:
                 lines.append(f"  {geo._host(url):32s} {name:8s} ok    {len(data):4d} elements in {dt:.1f}s")
     # End-to-end on the real code path, with a throwaway cache.
-    os.environ["GEO_CACHE_DIR"] = ""
+    geo.reset_breaker()
     geo.CACHE_DIR = os.path.join(".geo_cache", "diag")
     try:
         g = geo.get_geo(LAT, LNG, [{"signal": "beach", "max_m": 300},

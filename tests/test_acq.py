@@ -30,6 +30,12 @@ MCCALL = next(m for m in ACQ_MARKETS if m["key"] == "mccall_id")
 
 
 class GeometryTests(unittest.TestCase):
+    def setUp(self):
+        geo.reset_breaker()
+
+    def tearDown(self):
+        geo.reset_breaker()
+
     def test_beach_distance_one_block_quiet_street(self):
         els = [way({"natural": "beach"}, (-500, -150), (500, -150)),
                way({"highway": "residential"}, (-500, -60), (500, -60))]
@@ -131,6 +137,29 @@ class GeometryTests(unittest.TestCase):
         self.assertIsNone(data)
         self.assertIn("HTTP 429", err)
         self.assertIn("Too many", err)
+
+    def test_user_agent_identifies_the_project(self):
+        self.assertIn("github.com/JGBuildit/str-deal-scout", geo.USER_AGENT)
+
+    def test_circuit_breaker_stops_hammering_dead_servers(self):
+        geo.reset_breaker()
+        n = {"calls": 0}
+        def dead(url, data, timeout, headers):
+            n["calls"] += 1
+            raise geo.requests.exceptions.Timeout()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(geo, "CACHE_DIR", d), \
+             mock.patch.object(geo.requests, "post", side_effect=dead), \
+             mock.patch.object(geo.time, "sleep"):
+            for q in ("a", "b", "c", "d"):
+                with self.assertRaises(geo.GeoUnavailable):
+                    geo._run(q)
+            first = n["calls"]
+            with self.assertRaises(geo.GeoUnavailable) as cm:
+                geo._run("e")
+            self.assertEqual(n["calls"], first)  # no further network calls
+            self.assertIn("timeout", str(cm.exception))
+        self.assertLessEqual(first, geo.FAIL_LIMIT * len(geo.OVERPASS_URLS))
+        geo.reset_breaker()
 
     def test_one_good_server_is_enough(self):
         calls = []
