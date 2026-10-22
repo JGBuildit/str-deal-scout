@@ -13,8 +13,8 @@ _Gates: cash flow after debt service, modeled year-1 deduction near target, and 
 
 ### Flags to verify on the shortlist
 
-- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - Location UNVERIFIED - map lookup unavailable (HTTPSConnectionPool(host='overpass.kumi.systems', port=443): Read timed out. (read timeout=50)). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
-- **28A Meigs Dr, Shalimar, FL 32579** - Location UNVERIFIED - map lookup unavailable (HTTPSConnectionPool(host='overpass.kumi.systems', port=443): Read timed out. (read timeout=50)). STR rules: Confirm city/county registration; many condo associations restrict rentals.
+- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - Location UNVERIFIED - map lookup unavailable (overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body> | overpass.private.coffee timeout after 30s | overpass.kumi.systems timeout after 30s | lz4.overpass-api.de ConnectionError). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
+- **28A Meigs Dr, Shalimar, FL 32579** - Location UNVERIFIED - map lookup unavailable (overpass-api.de HTTP 406 in 0s <html> <head><title>406 Not Acceptable</title></head> <body> | overpass.private.coffee timeout after 30s | overpass.kumi.systems timeout after 30s | lz4.overpass-api.de ConnectionError). STR rules: Confirm city/county registration; many condo associations restrict rentals.
 
 ## Did not qualify (closest first)
 
