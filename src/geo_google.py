@@ -26,6 +26,7 @@ gates reach this module (a handful per week). Each costs roughly 3-8 requests.
 
 import math
 import os
+import re
 
 import requests
 
@@ -42,6 +43,27 @@ QUERIES = {
     "lake": ["lake"],
     "ski": ["ski lift", "ski resort"],
 }
+
+
+# Text search for "beach" also returns vacation rentals, hotels and restaurants
+# that merely have the word in their name. Drop those: by Google's place type,
+# and by listing-style words in the name.
+EXCLUDED_TYPES = {
+    "lodging", "hotel", "resort_hotel", "motel", "bed_and_breakfast", "rv_park",
+    "campground", "real_estate_agency", "real_estate", "restaurant", "bar", "cafe",
+    "food", "store", "travel_agency", "shopping_mall", "spa", "gym",
+}
+LISTING_NAME = re.compile(
+    r"\b(\d+\s?-?\s?(bed|br|bath)|bedroom|bed\b|new construction|rental|vacation|condo|"
+    r"villas?|house|home|cottage|townhome|townhouse|for sale|airbnb|vrbo|inn|suites?)\b",
+    re.IGNORECASE)
+
+
+def is_real_feature(name, types):
+    """False for rentals / businesses that only mention the feature in their name."""
+    if set(types or []) & EXCLUDED_TYPES:
+        return False
+    return not LISTING_NAME.search(name or "")
 
 
 def _geo_error():
@@ -119,7 +141,10 @@ def find_places(query, lat, lng, radius_m):
         loc = p.get("location") or {}
         if "latitude" not in loc:
             continue
-        out.append({"name": (p.get("displayName") or {}).get("text", ""),
+        name = (p.get("displayName") or {}).get("text", "")
+        if not is_real_feature(name, p.get("types", [])):
+            continue
+        out.append({"name": name,
                     "lat": loc["latitude"], "lng": loc["longitude"],
                     "types": p.get("types", []),
                     "straight_m": haversine_m(lat, lng, loc["latitude"], loc["longitude"])})

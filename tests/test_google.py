@@ -19,9 +19,9 @@ class Resp:
         return self._p
 
 
-def place(name, dlat, dlng):
+def place(name, dlat, dlng, types=None):
     return {"displayName": {"text": name}, "location": {"latitude": LAT + dlat, "longitude": LNG + dlng},
-            "types": ["natural_feature"]}
+            "types": types or ["natural_feature"]}
 
 
 def router(places=None, walk_m=140, eateries=11, calls=None):
@@ -96,6 +96,25 @@ class GoogleTests(unittest.TestCase):
         name, d = g["nearest"]["beach"]
         self.assertEqual(name, "Inlet Beach Regional Access")
         self.assertGreater(d, 1000)
+
+    def test_rentals_and_businesses_are_not_beaches(self):
+        junk = [
+            place("30A Grayton Beach New Construction! - Only 1 mile to the beach - Four-Bedroom House", -0.001, 0),
+            place("Beachside Villas", -0.0011, 0),
+            place("Beach House Inn", -0.0012, 0, ["lodging"]),
+            place("The Beach Bar", -0.0013, 0, ["bar", "restaurant"]),
+            place("4BR Beach Cottage Rental", -0.0014, 0),
+        ]
+        good = place("Wall Street Public Beach Access", -0.002, 0)
+        with mock.patch.object(geo_google.requests, "post", return_value=Resp(200, {"places": junk + [good]})):
+            res = geo_google.find_places("beach", LAT, LNG, 1500)
+        self.assertEqual([r["name"] for r in res], ["Wall Street Public Beach Access"])
+
+    def test_real_features_pass_the_filter(self):
+        for n in ("Grayton Beach State Park", "Inlet Beach Regional Access", "Payette Lake",
+                  "Brian Head Resort", "Seaside Beach Access 4", "Pine Mountain Ski Lift"):
+            self.assertTrue(geo_google.is_real_feature(n, ["ski_resort"]), n)
+        self.assertFalse(geo_google.is_real_feature("Brian Head Resort", ["lodging", "resort_hotel"]))
 
     def test_far_beach_does_not_match(self):
         far = place("Far Beach", -0.02, 0)  # ~2.2 km
