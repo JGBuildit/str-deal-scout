@@ -21,8 +21,16 @@ import re
 from . import airdna
 from .acq_config import (ACQ, FINANCING, DEPRECIATION, OPERATING,
                          LEASEHOLD_KEYWORDS, CONDO_KEYWORDS, EXCLUDE_PROPERTY_TYPES)
-from .geo import get_geo, evaluate_location, GeoUnavailable
+from . import geo_google
+from .geo import get_geo as _get_geo_osm, evaluate_location, GeoUnavailable
 from .model import estimate_utilities
+
+
+def get_geo(lat, lng, rules):
+    """Google when a key is configured, otherwise OpenStreetMap (Overpass)."""
+    if geo_google.available():
+        return geo_google.get_geo(lat, lng, rules)
+    return _get_geo_osm(lat, lng, rules)
 
 
 # ---------------------------------------------------------------------------

@@ -19,8 +19,46 @@ from . import geo
 LAT, LNG = 30.2737, -86.0179
 
 
+def google_section(lines):
+    from . import geo_google
+    if not geo_google.available():
+        lines.append("Google Maps: GOOGLE_MAPS_API_KEY not set - skipped")
+        return False
+    ok = True
+    steps = [
+        ("Places text search (beach)", lambda: geo_google.find_places("beach", LAT, LNG, 1500)),
+        ("Places nearby (eateries)", lambda: geo_google.count_eateries(LAT, LNG, 800)),
+        ("Routes walking", lambda: geo_google.walking_m(LAT, LNG, LAT - 0.002, LNG)),
+    ]
+    for name, fn in steps:
+        try:
+            res = fn()
+            detail = (f"{len(res)} places, nearest {res[0]['name']!r} {res[0]['straight_m']:.0f} m"
+                      if isinstance(res, list) and res else res)
+            lines.append(f"  Google {name}: ok ({detail})")
+        except geo.GeoUnavailable as e:
+            ok = False
+            lines.append(f"  Google {name}: FAIL {e}")
+    try:
+        g = geo_google.get_geo(LAT, LNG, [{"signal": "beach", "max_m": 300},
+                                          {"signal": "walkable", "min_pois": 8, "radius_m": 800}])
+        lines.append(f"  Google END-TO-END: beach {g['beach_m']} m {g['names'].get('beach', '')!r}, "
+                     f"eateries {g['pois_walkable']}")
+    except geo.GeoUnavailable as e:
+        ok = False
+        lines.append(f"  Google END-TO-END FAILED: {e}")
+    return ok
+
+
 def main():
     lines = [f"Map service check {datetime.now(timezone.utc).isoformat(timespec='seconds')}Z"]
+    if google_section(lines):
+        text = "\n".join(lines)
+        print(text)
+        os.makedirs("digests", exist_ok=True)
+        with open(os.path.join("digests", "geo_diagnostics.txt"), "w", encoding="utf-8") as f:
+            f.write(text + "\n")
+        return  # Google works; skip probing the Overpass servers
     tiny = "[out:json][timeout:10];node(30.2737,-86.0179,30.2738,-86.0178);out;"
     tests = [("tiny", tiny),
              ("water", geo._water_query(LAT, LNG, 1000)),
