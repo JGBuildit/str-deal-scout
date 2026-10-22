@@ -93,6 +93,21 @@ class GeometryTests(unittest.TestCase):
         self.assertTrue(geo.evaluate_location(g, [{"signal": "ski", "max_m": 600}])["ok"])
         self.assertFalse(geo.evaluate_location(g, [{"signal": "ski", "max_m": 400}])["ok"])
 
+    def test_queries_clip_geometry_to_bbox(self):
+        q = geo._near_query(LAT0, LNG0, 1000, 800)
+        self.assertRegex(q, r"out geom\(30\.\d+,-86\.\d+,30\.\d+,-86\.\d+\) tags;")
+        s, w, n, e = [float(x) for x in q.split("out geom(")[1].split(")")[0].split(",")]
+        self.assertTrue(s < LAT0 < n and w < LNG0 < e)
+        self.assertRegex(geo._ski_query(LAT0, LNG0, 3000), r"out geom\(")
+
+    def test_retry_then_fail_raises(self):
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(geo, "CACHE_DIR", d), \
+             mock.patch.object(geo.requests, "post", side_effect=OSError("down")) as post, \
+             mock.patch.object(geo.time, "sleep"):
+            with self.assertRaises(geo.GeoUnavailable):
+                geo._run("x")
+        self.assertEqual(post.call_count, 2 * len(geo.OVERPASS_URLS))
+
     def test_no_network_raises(self):
         with mock.patch.dict(os.environ, {"GEO_PROVIDER": "off"}):
             with self.assertRaises(geo.GeoUnavailable):
