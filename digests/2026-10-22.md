@@ -12,7 +12,7 @@ _Gates: cash flow after debt service, modeled year-1 deduction near target, and 
 
 ### Flags to verify on the shortlist
 
-- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - walk is by Google route; whether it crosses a busy road is NOT checked - view on a map. STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
+- **8 Gulf Mark Ln, Santa Rosa Beach, FL 32459** - walk is by Google route; whether it crosses a busy road is NOT checked - view on a map; nearest beach found: 30A Grayton Beach New Construction! - Only 1 mile to the beach - Four-Bedroom House (~124 m straight-line). STR rules: Walton County: confirm registration; many 30A communities (HOAs, Seaside/Alys-style) restrict or regulate rentals.
 
 ## Did not qualify (closest first)
 

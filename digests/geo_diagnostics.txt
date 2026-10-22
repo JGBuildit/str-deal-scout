@@ -1,5 +1,5 @@
-Map service check 2026-10-22T19:57:07+00:00Z
-  Google Places text search (beach): ok (8 places, nearest 'Inlet Beach Regional Access' 1342 m)
+Map service check 2026-10-22T19:58:41+00:00Z
+  Google Places text search (beach access): ok ('Wall Street Public Beach Access' 941 m; 'Inlet Beach Regional Access' 1342 m; 'Phillips Inlet Beach Access' 1755 m)
   Google Places nearby (eateries): ok (13)
   Google Routes walking: ok (334)
   Google END-TO-END: beach None m '', eateries 13
