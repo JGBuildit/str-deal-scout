@@ -8,8 +8,14 @@ Two optional CSV files live in data/airdna/ (headers are already there):
   market_stats.csv   - one row per market x bedroom count, from AirDNA's
                        market view filtered by bedrooms (and pool / hot tub
                        if you want amenity-specific numbers).
-      market_key,bedrooms,adr,occupancy,pool,hot_tub,source_date,notes
-      scenic_30a,4,640,0.51,y,,2026-10-17,Market Minder 4BR w/ pool
+      market_key,bedrooms,annual_revenue,adr,occupancy,pool,hot_tub,source_date,notes
+      scenic_30a,4,109000,767,0.57,,,2026-10-22,Santa Rosa Beach/30a 4BR 2+ba
+
+  IMPORTANT: put AirDNA's "Annual Revenue" (the average per listing) in
+  annual_revenue. ADR x occupancy x 365 overstates it by roughly 40% because
+  occupancy is measured against the nights a listing was open for booking,
+  not all 365. When annual_revenue is present the model uses it directly;
+  adr / occupancy are then kept for reference only.
 
   rentalizer.csv     - address-level results you get by running AirDNA's
                        Rentalizer on a shortlisted property. Overrides the
@@ -79,11 +85,14 @@ def load(directory=None):
     market = []
     for r in _read(os.path.join(d, "market_stats.csv")):
         adr, occ = _num(r.get("adr")), _occ(r.get("occupancy"))
+        rev = _num(r.get("annual_revenue"))
         beds = _num(r.get("bedrooms"))
-        if not r.get("market_key") or adr is None or occ is None or beds is None:
+        if not r.get("market_key") or beds is None:
+            continue
+        if rev is None and (adr is None or occ is None):
             continue
         market.append({"market_key": r["market_key"], "bedrooms": int(beds),
-                       "adr": adr, "occ": occ,
+                       "annual_revenue": rev, "adr": adr, "occ": occ,
                        "pool": _flag(r.get("pool")), "hot_tub": _flag(r.get("hot_tub")),
                        "date": r.get("source_date", "")})
     prop = {}
@@ -138,5 +147,5 @@ def lookup(data, market_key, address, bedrooms, has_pool, has_hot_tub):
     if best is None:
         return None
     return {"source": "airdna-market", "date": best["date"], "adr": best["adr"],
-            "occ": best["occ"], "annual_revenue": None,
+            "occ": best["occ"], "annual_revenue": best.get("annual_revenue"),
             "amenity_matched": best_s > 0}

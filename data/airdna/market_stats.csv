@@ -1,1 +1,5 @@
-market_key,bedrooms,adr,occupancy,pool,hot_tub,source_date,notes
+market_key,bedrooms,annual_revenue,adr,occupancy,pool,hot_tub,source_date,notes
+scenic_30a,3,90932,602.19,0.59,,,2026-10-22,AirDNA Santa Rosa Beach/30a submarket; 2+ baths; avg per listing; 767 listings
+scenic_30a,4,108900,766.62,0.57,,,2026-10-22,AirDNA Santa Rosa Beach/30a submarket; 2+ baths; avg per listing; 878 listings
+scenic_30a,5,167000,1170,0.56,,,2026-10-22,AirDNA Santa Rosa Beach/30a submarket; 2+ baths; avg per listing; 344 listings
+scenic_30a,6,198000,1730,0.52,,,2026-10-22,AirDNA Santa Rosa Beach/30a submarket; 6-10+ bedrooms; 2+ baths; 268 listings
