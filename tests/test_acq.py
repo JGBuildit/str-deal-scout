@@ -219,10 +219,19 @@ class ExclusionTests(unittest.TestCase):
 
 class FinanceTests(unittest.TestCase):
     def test_debt_service_matches_known_payment(self):
-        # $900,000 loan, 7.25%, 30 yrs -> $6,139.5/mo (standard amortization)
-        loan, ds = acq._annual_debt_service(1_200_000)
-        self.assertAlmostEqual(loan, 900_000)
+        # Standard amortization at 7.25%, 30 years, independent of the config default.
+        fin = {"down_pct": 0.25, "rate": 0.0725, "term_years": 30, "closing_pct": 0.03}
+        with mock.patch.dict(acq.FINANCING, fin):
+            loan, ds = acq._annual_debt_service(1_200_000)
+        self.assertAlmostEqual(loan, 900_000)               # 25% down
         self.assertAlmostEqual(ds / 12, 6139.6, delta=1.0)
+        with mock.patch.dict(acq.FINANCING, {**fin, "down_pct": 0.20}):
+            loan, ds = acq._annual_debt_service(1_200_000)
+        self.assertAlmostEqual(loan, 960_000)               # 20% down
+        self.assertAlmostEqual(ds / 12, 6548.9, delta=1.0)
+
+    def test_default_down_payment_is_20_percent(self):
+        self.assertEqual(acq.FINANCING["down_pct"], 0.20)
 
     def test_deduction_math(self):
         am = acq.detect_amenities(LISTING)

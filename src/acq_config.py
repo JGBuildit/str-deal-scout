@@ -42,7 +42,7 @@ ACQ = {
 # FINANCING  (edit to your real terms)
 # ---------------------------------------------------------------------------
 FINANCING = {
-    "down_pct": 0.25,
+    "down_pct": 0.20,
     "rate": 0.0725,                   # estimate - second-home / DSCR rate
     "term_years": 30,
     "closing_pct": 0.03,
